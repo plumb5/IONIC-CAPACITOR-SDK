@@ -230,13 +230,13 @@ public class Plumb5Plugin extends Plugin {
     }
 }
 @PluginMethod
-    private void tracking(JSONArray args, PluginCall callbackContext) {
+    public void tracking(PluginCall callbackContext) {
         Map<String, Object> tracking = null;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         Date date = new Date();
 
         try {
-            tracking = new ObjectMapper().readValue(args.getJSONObject(0).toString(), HashMap.class);
+            tracking = new ObjectMapper().readValue(callbackContext.getData().toString(), HashMap.class);
             tracking.put("SessionId", P5LifeCycle.getP5Session());
             tracking.put("CarrierName", getCarrierName(this.bridge.getActivity()));
             tracking.put("CampaignId", 0);
@@ -289,17 +289,17 @@ public class Plumb5Plugin extends Plugin {
         }
     }
 @PluginMethod
-    private void notificationSubscribe(String notificationSubscribeVF, PluginCall callbackContext) {
+public void notificationSubscribe(String notificationSubscribeVF, PluginCall callbackContext) {
         callbackContext.resolve();
     }
 @PluginMethod
-    private void eventPost(JSONArray args, PluginCall callbackContext) {
+public void eventPost(PluginCall callbackContext) {
 
 
         Map<String, Object> eventDetails = new HashMap<>();
 
         try {
-            eventDetails = new ObjectMapper().readValue(args.getJSONObject(0).toString(), HashMap.class);
+            eventDetails = new ObjectMapper().readValue(callbackContext.getData().toString(), HashMap.class);
             Date date = new Date();
             DateFormat dateFormat = new SimpleDateFormat(P5Constants.SAMPLE_DATE, Locale.ENGLISH);
             eventDetails.put(P5Constants.SESSION_ID, P5LifeCycle.getP5Session());
@@ -340,11 +340,11 @@ public class Plumb5Plugin extends Plugin {
     }
 
 @PluginMethod
-    private void pushResponsePost(JSONObject json, PluginCall callbackContext) {
+    private void pushResponse( PluginCall callbackContext) {
         Map<String, Object> inAppDetails = new HashMap<>();
 
         try {
-            inAppDetails = new ObjectMapper().readValue(json.toString(), HashMap.class);
+            inAppDetails = new ObjectMapper().readValue(callbackContext.getData().toString(), HashMap.class);
             inAppDetails.put(P5Constants.DEVICE_ID, getDeviceId(this.bridge.getActivity()));
             inAppDetails.put(P5Constants.SESSION_ID, P5LifeCycle.getP5Session());
             inAppDetails.put(P5Constants.EVENT_ID, "");
