@@ -102,12 +102,12 @@ pushResponse(options: { ScreenName: string; PageParameter: any; }) => Promise<vo
 ### eventPost(...)
 
 ```typescript
-eventPost(options: UserOptions) => Promise<void>
+eventPost(options: EventDetails) => Promise<void>
 ```
 
-| Param         | Type                                                |
-| ------------- | --------------------------------------------------- |
-| **`options`** | <code><a href="#useroptions">UserOptions</a></code> |
+| Param         | Type                                                  |
+| ------------- | ----------------------------------------------------- |
+| **`options`** | <code><a href="#eventdetails">EventDetails</a></code> |
 
 --------------------
 
@@ -131,6 +131,16 @@ eventPost(options: UserOptions) => Promise<void>
 | **`Occupation`**    | <code>string</code> |
 | **`Interests`**     | <code>string</code> |
 | **`Location`**      | <code>string</code> |
+
+
+#### EventDetails
+
+| Prop              | Type                |
+| ----------------- | ------------------- |
+| **`Type`**        | <code>string</code> |
+| **`Name`**        | <code>string</code> |
+| **`PhoneNumber`** | <code>string</code> |
+| **`Value`**       | <code>number</code> |
 
 </docgen-api>
 # plumb5-sdk
