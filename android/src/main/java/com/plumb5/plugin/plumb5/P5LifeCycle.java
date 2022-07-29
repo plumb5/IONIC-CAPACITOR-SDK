@@ -263,65 +263,7 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
         return ScreenName;
     }
 
-    private void tracking(Activity context) {
 
-        SharedPreferences pref = context.getSharedPreferences(P5Constants.P5_INIT_KEY, 0);
-        String gcmRegistrationId = pref.getString(P5Constants.PROPERTY_REG_ID, "");
-        Map<String, Object> tracking = new HashMap<>();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        Date date = new Date();
-        try {
-
-            tracking.put("SessionId", P5LifeCycle.getP5Session());
-            tracking.put("GcmRegId", gcmRegistrationId);
-            tracking.put("ScreenName", p5GetScreenName(context));
-            tracking.put("CampaignId", 0);
-            tracking.put("WorkFlowDataId", "0");
-            tracking.put("IsNewSession", isExpired);
-            tracking.put("DeviceId", P5.getDeviceId(context));
-            tracking.put("Offline", 0);
-            tracking.put("TrackDate", dateFormat.format(date));
-            tracking.put("GeofenceId", "0");
-            tracking.put("Locality", P5LifeCycle.Locality);
-            tracking.put("City", P5LifeCycle.City);
-            tracking.put("State", P5LifeCycle.State);
-            tracking.put("Country", P5LifeCycle.Country);
-            tracking.put("CountryCode", P5LifeCycle.CountryCode);
-            tracking.put("Latitude", String.valueOf(P5LifeCycle.Latitude));
-            tracking.put("Longitude", String.valueOf(P5LifeCycle.Longitude));
-            tracking.put("PageParameter", "");
-            tracking.put("CarrierName", Plumb5Plugin.getCarrierName(context));
-
-        } catch (Exception e) {
-            Log.v(TAG, "Please check the parameters \n error -");
-            e.printStackTrace();
-
-        }
-
-        Call<String> responseBodyCall = api.Tracking(tracking);
-        responseBodyCall.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                if (response.isSuccessful()) {
-
-
-                    Log.v(TAG, "Tracking details sent successful");
-
-                } else {
-
-                    Log.e(TAG, "Tracking details  failed");
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e(TAG, "Tracking details failed");
-                Log.e(TAG, t.getMessage());
-                t.printStackTrace();
-            }
-        });
-    }
 
     public BroadcastReceiver pushbroadcastReceiver = new BroadcastReceiver() {
         @Override

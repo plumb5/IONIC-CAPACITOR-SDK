@@ -11,7 +11,7 @@ public class MyApplication extends Application {
         super.onCreate();
 
 
-        registerActivityLifecycleCallbacks(new com.plumb5.plugin.plumb5.P5LifeCycle());
+        registerActivityLifecycleCallbacks(new P5LifeCycle());
 
     }
 
