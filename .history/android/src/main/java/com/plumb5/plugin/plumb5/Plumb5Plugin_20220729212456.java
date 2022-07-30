@@ -132,7 +132,6 @@ public class Plumb5Plugin extends Plugin {
 
     @PluginMethod
     public void setUserDetails(PluginCall callbackContext) {
-
         JSONObject params = callbackContext.getData();
 
         Map<String, Object> userDetails = new HashMap<>();
@@ -197,9 +196,9 @@ public class Plumb5Plugin extends Plugin {
             }
         });
 
-        accountId = getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID).isEmpty() ?"": getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID).toString();
-        serviceURL = getConfig().getString(P5Constants.PLUMB5_BASE_URL).isEmpty() ?"": getConfig().getString(P5Constants.PLUMB5_BASE_URL).toString();
-        appKey = getConfig().getString(P5Constants.PLUMB5_API_KEY).isEmpty() ?"": getConfig().getString(P5Constants.PLUMB5_API_KEY).toString();
+        accountId = getMetadata(this.getBridge().getActivity(), P5Constants.PLUMB5_ACCOUNT_ID);
+        serviceURL = getMetadata(this.getBridge().getActivity(), P5Constants.PLUMB5_BASE_URL);
+        appKey = getMetadata(this.getBridge().getActivity(), P5Constants.PLUMB5_API_KEY);
         api = ServiceGenerator.createService(ServiceGenerator.API.class, appKey, accountId, serviceURL);
 
     }
@@ -391,11 +390,11 @@ public class Plumb5Plugin extends Plugin {
     }
 
     @PluginMethod
-    public void  pushR(PluginCall callbackContext) {
+    private void pushR(PluginCall callbackContext) {
         Log.e(TAG, "pushR details ");
     }
     @PluginMethod
-    public void  pushResponse(PluginCall callbackContext) {
+    private void pushResponse(PluginCall callbackContext) {
         Map<String, Object> inAppDetails = new HashMap<>();
 
         try {
@@ -479,7 +478,7 @@ public class Plumb5Plugin extends Plugin {
     }
 
     @PluginMethod
-    public void  deviceRegistration(PluginCall callbackContext) {
+    private void deviceRegistration(PluginCall callbackContext) {
 
 
         SharedPreferences pref = this.getBridge().getActivity().getSharedPreferences(P5Constants.P5_INIT_KEY, 0);

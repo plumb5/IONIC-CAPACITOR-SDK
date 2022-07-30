@@ -57,7 +57,7 @@ public class P5SendNotification {
                     }
                 } else if (Parameter.indexOf('=') > 0 && Parameter.length() > 1) {
                     String[] paTextValue = Parameter.split("\\=");
-                    intent.putExtra(paTextValue[0], paTextValue[1]);
+                    intent.putExtra(paTextValue[0], paTextValue[1].isEmpty() ? "": paTextValue[1]);
                 }
 
                 if (clkAction == 1) {

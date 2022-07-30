@@ -32,13 +32,3 @@ export interface EventDetails {
   Value: number,
 }
 
-export interface PluginsConfig {
-  Plumb5?: {
- 
-    PLUMB5_ACCOUNT_ID?:number;
-
-    PLUMB5_BASE_URL?: string;
-    PLUMB5_API_KEY?: string;
-  };
-}
-

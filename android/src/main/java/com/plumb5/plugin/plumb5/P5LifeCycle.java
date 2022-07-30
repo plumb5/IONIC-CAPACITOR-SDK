@@ -99,9 +99,9 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
             afilter.addAction(pkg + ".10");
             activity.getApplicationContext().registerReceiver(MyActionReceiver, afilter);
             activity.getApplicationContext().registerReceiver(dMyAlarmReceiver, new IntentFilter(pkg + ".alarm"));
-            String accountId = P5.getMetadata(getactivity, P5Constants.PLUMB5_ACCOUNT_ID);
-            String serviceURL = P5.getMetadata(getactivity, P5Constants.PLUMB5_BASE_URL);
-            String appKey = P5.getMetadata(getactivity, P5Constants.PLUMB5_API_KEY);
+            String accountId = P5.getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID).isEmpty() ?"": P5.getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID).toString();
+            String  serviceURL = P5.getConfig().getString(P5Constants.PLUMB5_BASE_URL).isEmpty() ?"": P5.getConfig().getString(P5Constants.PLUMB5_BASE_URL).toString();
+            String appKey = P5.getConfig().getString(P5Constants.PLUMB5_API_KEY).isEmpty() ?"": P5.getConfig().getString(P5Constants.PLUMB5_API_KEY).toString();
             api = ServiceGenerator.createService(ServiceGenerator.API.class, appKey, accountId, serviceURL);
 
         } catch (Exception ex) {

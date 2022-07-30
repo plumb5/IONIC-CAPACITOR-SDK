@@ -6,6 +6,7 @@ export interface Plumb5Plugin {
   setUserDetails(options:UserOptions): Promise<void>;
   tracking(options: { ScreenName: string; PageParameter: any }): Promise<void>;
   pushResponse(options: { ScreenName: string; PageParameter: any }): Promise<void>;
+  pushR(options: { ScreenName: string; PageParameter: any }): Promise<void>;
   eventPost(options:EventDetails): Promise<void>;
 }
 
@@ -30,15 +31,5 @@ export interface EventDetails {
   Name: string,
   PhoneNumber: string,
   Value: number,
-}
-
-export interface PluginsConfig {
-  Plumb5?: {
- 
-    PLUMB5_ACCOUNT_ID?:number;
-
-    PLUMB5_BASE_URL?: string;
-    PLUMB5_API_KEY?: string;
-  };
 }
 
