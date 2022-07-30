@@ -363,7 +363,7 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
         public void onReceive(Context context, Intent intent) {
 
             try {
-                String AppKey = P5.getMetadata(context, P5Constants.PLUMB5_API_KEY);
+                String AppKey = P5.p5GetAppKey();
                 String PackAge = BuildConfig.APPLICATION_ID;
                 if (context.getPackageName().toLowerCase().contains(PackAge.toLowerCase()) && AppKey.length() > 0) {
                     Bundle bdl = intent.getExtras();
@@ -523,7 +523,8 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
                         Intent intent1 = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         context.startActivity(intent1);
-//                        P5.navigateScreen(screen, cordovaActivity, cordovaWebView);
+
+                        P5.getBridge().triggerJSEvent("onPushNotification", "window", "{ 'routeUrl': "+screen+" }");
 
 
                     }
@@ -581,9 +582,9 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
 
 
     void callEventSend(String json, Context context) {
-        String accountId = P5.getMetadata(context, P5Constants.PLUMB5_ACCOUNT_ID);
-        String serviceURL = P5.getMetadata(context, P5Constants.PLUMB5_BASE_URL);
-        String appKey = P5.getMetadata(context, P5Constants.PLUMB5_API_KEY);
+        String accountId = P5.accountId;
+        String serviceURL = P5.serviceURL;
+        String appKey = P5.appKey;
 
         Map<String, Object> eventDetails = new HashMap<>();
 
@@ -623,9 +624,9 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
     }
 
     void callPushSend(Context context, Map<String, Object> pushResponse) {
-        String accountId = P5.getMetadata(context, P5Constants.PLUMB5_ACCOUNT_ID);
-        String serviceURL = P5.getMetadata(context, P5Constants.PLUMB5_BASE_URL);
-        String appKey = P5.getMetadata(context, P5Constants.PLUMB5_API_KEY);
+        String accountId = P5.accountId;
+        String serviceURL = P5.serviceURL;
+        String appKey = P5.appKey;
 
 
         try {

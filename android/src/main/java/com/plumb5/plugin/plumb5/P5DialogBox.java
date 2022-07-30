@@ -1094,7 +1094,8 @@ public class P5DialogBox {
                         intent.setClassName(context, getRedirect);
                         if (new P5ConnectionDetector(context).isConnectingToInternet()) {
                             P5dialogdismiss();
-//                            eng.navigateScreen(Redirect, cordovaActivity, cordovaWebView);
+
+                            eng.getBridge().triggerJSEvent("onPushNotification", "window", "{ 'routeUrl': "+Redirect+" }");
 
                         } else {
                             Log.d("p5", "No internet");
@@ -1103,7 +1104,7 @@ public class P5DialogBox {
                         int lene = getRedirect.lastIndexOf('.');
                         intent.setComponent(new ComponentName(getRedirect.substring(0, lene), getRedirect));
                         P5dialogdismiss();
-//                        eng.navigateScreen(Redirect, cordovaActivity, cordovaWebView);
+                        eng.getBridge().triggerJSEvent("onPushNotification", "window", "{ 'routeUrl': "+Redirect+" }");
                     }
                 } else if (getAction.equals("Browser") && getRedirect.contains("http")) {
                     Uri uri = Uri.parse(getRedirect);

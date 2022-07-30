@@ -41,8 +41,8 @@ public class P5SendNotification {
             Intent intent = new Intent();
 
             if (clkAction == 2) {
-                int len1 = eng.getMetadata(context, P5Constants.PLUMB5_BASE_URL).lastIndexOf('/');
-                String getnewurl = eng.getMetadata(context, P5Constants.PLUMB5_BASE_URL).substring(0, len1 - 1);
+                int len1 = eng.serviceURL.lastIndexOf('/');
+                String getnewurl = eng.serviceURL.substring(0, len1 - 1);
                 String geturl = getnewurl.substring(0, getnewurl.lastIndexOf('/'));
                 Uri uri = Uri.parse(nIntent);
                 intent.putExtra("ebtnpram", uri.toString());

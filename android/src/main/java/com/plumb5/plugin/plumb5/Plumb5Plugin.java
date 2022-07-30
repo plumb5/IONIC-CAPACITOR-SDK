@@ -542,23 +542,23 @@ public class Plumb5Plugin extends Plugin {
 
     }
 
-    public String getMetadata(Context context, String key) {
-
-
-        try {
-            return Objects.requireNonNull(context.getPackageManager().getApplicationInfo(
-                    context.getPackageName(), PackageManager.GET_META_DATA).metaData.get(key)).toString();
-
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG,
-                    "Failed to load meta-data, NameNotFound: " + e.getMessage());
-            return null;
-        } catch (NullPointerException e) {
-            Log.e(TAG,
-                    "Failed to load meta-data, NullPointer: " + e.getMessage());
-            return null;
-        }
-    }
+//    public String getMetadata(Context context, String key) {
+//
+//
+//        try {
+//            return Objects.requireNonNull(context.getPackageManager().getApplicationInfo(
+//                    context.getPackageName(), PackageManager.GET_META_DATA).metaData.get(key)).toString();
+//
+//        } catch (PackageManager.NameNotFoundException e) {
+//            Log.e(TAG,
+//                    "Failed to load meta-data, NameNotFound: " + e.getMessage());
+//            return null;
+//        } catch (NullPointerException e) {
+//            Log.e(TAG,
+//                    "Failed to load meta-data, NullPointer: " + e.getMessage());
+//            return null;
+//        }
+//    }
 
     private boolean checkPlayServices(PluginCall callbackContext) {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
@@ -613,15 +613,7 @@ public class Plumb5Plugin extends Plugin {
         return list.size() > 0;
     }
 
-//    public void navigateScreen(String screen, CordovaInterface cordovaActivity, CordovaWebView cordovaWebView) {
-//        final String json = "{'routeUrl':'"+screen+"'}";
-//        cordovaActivity.this.bridge.getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                cordovaWebView.loadUrl("javascript:cordova.fireDocumentEvent('onPushNotification'," + json + ");");
-//            }
-//        });
-//    }
+
 }
 
 
