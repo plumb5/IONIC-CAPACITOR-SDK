@@ -582,9 +582,9 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
 
 
     void callEventSend(String json, Context context) {
-        String accountId = P5.accountId;
-        String serviceURL = P5.serviceURL;
-        String appKey = P5.appKey;
+        String accountId = Plumb5Plugin.accountId;
+        String serviceURL = Plumb5Plugin.serviceURL;
+        String appKey = Plumb5Plugin.appKey;
 
         Map<String, Object> eventDetails = new HashMap<>();
 
@@ -624,9 +624,9 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
     }
 
     void callPushSend(Context context, Map<String, Object> pushResponse) {
-        String accountId = P5.accountId;
-        String serviceURL = P5.serviceURL;
-        String appKey = P5.appKey;
+        String accountId = Plumb5Plugin.accountId;
+        String serviceURL = Plumb5Plugin.serviceURL;
+        String appKey = Plumb5Plugin.appKey;
 
 
         try {

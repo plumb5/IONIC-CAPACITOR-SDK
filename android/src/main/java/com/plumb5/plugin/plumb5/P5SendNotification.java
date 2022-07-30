@@ -7,13 +7,13 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -28,36 +28,35 @@ import java.util.HashMap;
 
 public class P5SendNotification {
 
-    protected static final String TAG = "p5 - P5SendNotification";
     public static final String MyPREFERENCES = "MyPrefs";
-
+    protected static final String TAG = "p5 - P5SendNotification";
 
     static void Send(Context context, int PushId, int Action, String notificationTicker, String notificationTitle, String nMessage, String nSubtext, String nImage, int clkAction, String nIntent, String Parameter, String ExtraAction, String GeofenceName, String BeaconName, String workflowId, String P5UniqueId) {
 
         try {
             String apiKey = Plumb5Plugin.appKey;
 
-            Plumb5Plugin eng = new Plumb5Plugin();
+
             Intent intent = new Intent();
 
             if (clkAction == 2) {
-                int len1 = eng.serviceURL.lastIndexOf('/');
-                String getnewurl = eng.serviceURL.substring(0, len1 - 1);
+                int len1 = Plumb5Plugin.serviceURL.lastIndexOf('/');
+                String getnewurl = Plumb5Plugin.serviceURL.substring(0, len1 - 1);
                 String geturl = getnewurl.substring(0, getnewurl.lastIndexOf('/'));
                 Uri uri = Uri.parse(nIntent);
                 intent.putExtra("ebtnpram", uri.toString());
-                intent.setAction( context.getPackageName() + "." + "3");
+                intent.setAction(context.getPackageName() + "." + "3");
             } else if (clkAction == 0 || clkAction == 1) {
 
                 if (Parameter.indexOf(',') > 0 && Parameter.length() > 1) {
                     String[] paText = Parameter.split("\\,");
                     for (int i = 0; i < paText.length; i++) {
                         String[] paTextValue = paText[i].split("\\=");
-                        intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1]: ""));
+                        intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1] : ""));
                     }
                 } else if (Parameter.indexOf('=') > 0 && Parameter.length() > 1) {
                     String[] paTextValue = Parameter.split("\\=");
-                    intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1]: ""));
+                    intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1] : ""));
                 }
 
                 if (clkAction == 1) {
@@ -70,8 +69,8 @@ public class P5SendNotification {
                     intent.putExtra("P5UniqueId", P5UniqueId);
                     intent.putExtra("sentFromNotiFication", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("screenName",nIntent);
-                    intent.setAction( context.getPackageName() + "." + "10");
+                    intent.putExtra("screenName", nIntent);
+                    intent.setAction(context.getPackageName() + "." + "10");
 
                 }
             }
@@ -83,7 +82,7 @@ public class P5SendNotification {
 
                 json.put("apiKey", apiKey);
                 json.put("MobileFormId", PushId);
-                json.put("DeviceId", eng.getDeviceId(context));
+                json.put("DeviceId", Plumb5Plugin.getDeviceId(context));
                 json.put("SessionId", P5LifeCycle.getP5Session());
                 json.put("FormResponses", "Push");
                 json.put("BannerView", 1);
@@ -104,8 +103,16 @@ public class P5SendNotification {
 
             //Log.d("p5", nIntent + "nn" + Parameter);
 
+            PendingIntent pIntent = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                pIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                pIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            }
+
+
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
 
@@ -161,9 +168,17 @@ public class P5SendNotification {
                             btnReceive.putExtra("workflowid", workflowId);
                             btnReceive.putExtra("P5UniqueId", P5UniqueId);
                             btnReceive.setAction(context.getPackageName() + "." + actionno);
-                            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(context, 0, btnReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                            Log.i("HI all", "plumb5." + actionno + "/" + btnText[i]);
+                            PendingIntent pendingIntentYes = null;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                pendingIntentYes = PendingIntent.getBroadcast(context, 0, btnReceive, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+                            } else {
+                                pendingIntentYes = PendingIntent.getBroadcast(context, 0, btnReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            }
+
+                            Log.i(TAG, "plumb5." + actionno + "/" + btnText[i]);
 
                             int btnIcon = 0;
                             if (icochk != 0) {
@@ -219,7 +234,7 @@ public class P5SendNotification {
                 if (nSubtext.length() > 0) {
                     bigtextStyle.setSummaryText(nSubtext);
                 }
-                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(PushId, bigtextStyle.build());
+                notificationManager.notify(PushId, bigtextStyle.build());
 
             }
 
@@ -246,7 +261,7 @@ public class P5SendNotification {
                 if (nSubtext.length() > 0) {
                     inboxStyle.setSummaryText(nSubtext);
                 }
-                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(PushId, inboxStyle.build());
+                notificationManager.notify(PushId, inboxStyle.build());
             }
 
             //For BigPictureStyle.........................................................................
@@ -280,7 +295,9 @@ public class P5SendNotification {
                 if (nSubtext.length() > 0) {
                     inboxStyle.setSummaryText(nSubtext);
                 }
-                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(PushId, inboxStyle.build());
+
+                notificationManager.notify(PushId, inboxStyle.build());
+
             }
 
         } catch (Throwable e) {

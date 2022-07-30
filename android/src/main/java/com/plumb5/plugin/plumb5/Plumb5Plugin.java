@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,8 +28,7 @@ import com.getcapacitor.annotation.Permission;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import okhttp3.ResponseBody;
@@ -55,13 +54,38 @@ import retrofit2.Response;
                         strings = {Manifest.permission.ACCESS_NETWORK_STATE},
                         alias = "network"
                 ),
-                @Permission(strings = {Manifest.permission.INTERNET}, alias = "internet"),
+                @Permission(
+                        strings = {Manifest.permission.INTERNET},
+                        alias = "internet"
+                ),
                 @Permission(
                         strings = {Manifest.permission.WAKE_LOCK},
                         alias = "wakelock"
                 ),
+                @Permission(
+                        strings = {Manifest.permission.ACCESS_COARSE_LOCATION},
+                        alias = "location"
+                ),
+                @Permission(
+                        strings = {Manifest.permission.ACCESS_FINE_LOCATION},
+                        alias = "location-"
+                ),
+                @Permission(
+                        strings = {Manifest.permission.CALL_PHONE},
+                        alias = "state"
+                ),
+                @Permission(
+                        strings = {Manifest.permission.READ_PHONE_STATE},
+                        alias = "phone"
+                ),
+                @Permission(
+                        strings = {Manifest.permission.SYSTEM_ALERT_WINDOW},
+                        alias = "alert"
+                ),
         }
 )
+
+
 public class Plumb5Plugin extends Plugin {
     protected static final String TAG = "p5 - Engine";
     static String projectNumber = null;
@@ -130,6 +154,21 @@ public class Plumb5Plugin extends Plugin {
 
     }
 
+    public static synchronized String getDeviceId(Context context) {
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    P5Constants.PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(P5Constants.PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(P5Constants.PREF_UNIQUE_ID, uniqueID);
+                editor.commit();
+            }
+        }
+        return uniqueID;
+    }
+
     @PluginMethod
     public void setUserDetails(PluginCall callbackContext) {
 
@@ -168,7 +207,7 @@ public class Plumb5Plugin extends Plugin {
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Log.e(TAG, "User details failed");
                     Log.e(TAG, t.getMessage());
-                    callbackContext.error("Network call fail error - " + t.getMessage() + "\n stack trace - ");
+                    callbackContext.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                     t.printStackTrace();
                 }
             });
@@ -185,21 +224,21 @@ public class Plumb5Plugin extends Plugin {
         // your init code here
         P5LifeCycle.getactivity = this.getBridge().getActivity();
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this.getBridge().getActivity(), new OnSuccessListener<InstanceIdResult>() {
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this.bridge.getActivity(), new OnSuccessListener<String>() {
             @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
+            public void onSuccess(@NonNull String s) {
+
 
                 sharedPreferences
-                        .putString(P5Constants.PROPERTY_REG_ID, token)
+                        .putString(P5Constants.PROPERTY_REG_ID, s)
                         .apply();
-
             }
         });
 
-        accountId = getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID).isEmpty() ?"": getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID).toString();
-        serviceURL = getConfig().getString(P5Constants.PLUMB5_BASE_URL).isEmpty() ?"": getConfig().getString(P5Constants.PLUMB5_BASE_URL).toString();
-        appKey = getConfig().getString(P5Constants.PLUMB5_API_KEY).isEmpty() ?"": getConfig().getString(P5Constants.PLUMB5_API_KEY).toString();
+
+        accountId = getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID);
+        serviceURL = getConfig().getString(P5Constants.PLUMB5_BASE_URL);
+        appKey = getConfig().getString(P5Constants.PLUMB5_API_KEY);
         api = ServiceGenerator.createService(ServiceGenerator.API.class, appKey, accountId, serviceURL);
 
     }
@@ -390,9 +429,8 @@ public class Plumb5Plugin extends Plugin {
         });
     }
 
-
     @PluginMethod
-    public void  pushResponse(PluginCall callbackContext) {
+    public void pushResponse(PluginCall callbackContext) {
         Map<String, Object> inAppDetails = new HashMap<>();
 
         try {
@@ -475,8 +513,26 @@ public class Plumb5Plugin extends Plugin {
         }
     }
 
+//    public String getMetadata(Context context, String key) {
+//
+//
+//        try {
+//            return Objects.requireNonNull(context.getPackageManager().getApplicationInfo(
+//                    context.getPackageName(), PackageManager.GET_META_DATA).metaData.get(key)).toString();
+//
+//        } catch (PackageManager.NameNotFoundException e) {
+//            Log.e(TAG,
+//                    "Failed to load meta-data, NameNotFound: " + e.getMessage());
+//            return null;
+//        } catch (NullPointerException e) {
+//            Log.e(TAG,
+//                    "Failed to load meta-data, NullPointer: " + e.getMessage());
+//            return null;
+//        }
+//    }
+
     @PluginMethod
-    public void  deviceRegistration(PluginCall callbackContext) {
+    public void deviceRegistration(PluginCall callbackContext) {
 
 
         SharedPreferences pref = this.getBridge().getActivity().getSharedPreferences(P5Constants.P5_INIT_KEY, 0);
@@ -539,24 +595,6 @@ public class Plumb5Plugin extends Plugin {
 
     }
 
-//    public String getMetadata(Context context, String key) {
-//
-//
-//        try {
-//            return Objects.requireNonNull(context.getPackageManager().getApplicationInfo(
-//                    context.getPackageName(), PackageManager.GET_META_DATA).metaData.get(key)).toString();
-//
-//        } catch (PackageManager.NameNotFoundException e) {
-//            Log.e(TAG,
-//                    "Failed to load meta-data, NameNotFound: " + e.getMessage());
-//            return null;
-//        } catch (NullPointerException e) {
-//            Log.e(TAG,
-//                    "Failed to load meta-data, NullPointer: " + e.getMessage());
-//            return null;
-//        }
-//    }
-
     private boolean checkPlayServices(PluginCall callbackContext) {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(this.bridge.getActivity());
@@ -570,21 +608,6 @@ public class Plumb5Plugin extends Plugin {
         }
 
         return true;
-    }
-
-    public synchronized String getDeviceId(Context context) {
-        if (uniqueID == null) {
-            SharedPreferences sharedPrefs = context.getSharedPreferences(
-                    P5Constants.PREF_UNIQUE_ID, Context.MODE_PRIVATE);
-            uniqueID = sharedPrefs.getString(P5Constants.PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = sharedPrefs.edit();
-                editor.putString(P5Constants.PREF_UNIQUE_ID, uniqueID);
-                editor.commit();
-            }
-        }
-        return uniqueID;
     }
 
     public String p5GetScreenName(Activity activity) {

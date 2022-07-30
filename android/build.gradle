@@ -52,6 +52,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation 'com.google.android.gms:play-services-base:17.6.0'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
@@ -60,8 +61,12 @@ dependencies {
     implementation "com.android.support:multidex:1.0.3"
     implementation "com.squareup.retrofit2:retrofit:2.1.0"
     implementation "com.squareup.retrofit2:converter-jackson:2.1.0"
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
-    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'androidx.work:work-runtime:2.7.1'
+
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-iid:21.1.0'
+
+
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'androidx.work:work-runtime:2.7.1'

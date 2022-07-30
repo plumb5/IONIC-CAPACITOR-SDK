@@ -4,24 +4,31 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application android:name="com.plumb5.plugin.plumb5.MyApplication">
 
         <service
             android:name="com.plumb5.plugin.plumb5.P5FirebaseMessagingService"
-            android:exported="false">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </service>
         <receiver
             android:name="com.plumb5.plugin.plumb5.P5BootCompleteReceiver"
-            android:exported="false"
+            android:enabled="true"
+            android:exported="true"
             android:permission="android.intent.action.BOOT_COMPLETED">
+
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
         <meta-data
