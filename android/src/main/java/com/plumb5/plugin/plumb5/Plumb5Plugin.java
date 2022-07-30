@@ -390,10 +390,7 @@ public class Plumb5Plugin extends Plugin {
         });
     }
 
-    @PluginMethod
-    public void  pushR(PluginCall callbackContext) {
-        Log.e(TAG, "pushR details ");
-    }
+
     @PluginMethod
     public void  pushResponse(PluginCall callbackContext) {
         Map<String, Object> inAppDetails = new HashMap<>();

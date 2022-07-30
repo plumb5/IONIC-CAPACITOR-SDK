@@ -53,11 +53,11 @@ public class P5SendNotification {
                     String[] paText = Parameter.split("\\,");
                     for (int i = 0; i < paText.length; i++) {
                         String[] paTextValue = paText[i].split("\\=");
-                        intent.putExtra(paTextValue[0], paTextValue[1]);
+                        intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1]: ""));
                     }
                 } else if (Parameter.indexOf('=') > 0 && Parameter.length() > 1) {
                     String[] paTextValue = Parameter.split("\\=");
-                    intent.putExtra(paTextValue[0], paTextValue[1].isEmpty() ? "": paTextValue[1]);
+                    intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1]: ""));
                 }
 
                 if (clkAction == 1) {
