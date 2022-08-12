@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -491,6 +492,9 @@ public class Plumb5Plugin extends Plugin {
             }
         });
 
+    }
+    public  void  screenRoute(JSObject jsonObject){
+        notifyListeners("appUrlOpen",jsonObject);
     }
 
     private void checkUser(PluginCall callbackContext, JSONObject jsonObject) {

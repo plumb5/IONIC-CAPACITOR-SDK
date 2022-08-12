@@ -39,7 +39,7 @@ public class P5SendNotification {
             String apiKey = Plumb5Plugin.appKey;
 
 
-            Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.cordova.plumb.demo");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra("Plumb5", 0);

@@ -13,7 +13,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,6 +27,8 @@ import android.widget.Toast;
 
 import androidx.multidex.BuildConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.PluginCall;
 
 
 import org.json.JSONArray;
@@ -114,11 +115,12 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
 
         p5location = new P5Location(activity);
         getP5locationCity(activity);
-
+        notificationCheck(activity);
         Log.d(TAG, "onActivityStarted");
 
-
     }
+
+
 
     @Override
     public void onActivityResumed(Activity activity) {
@@ -150,6 +152,16 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
     public void onActivityDestroyed(Activity activity) {
         Log.d(TAG, "onActivityDestroyed");
         preTime = new Date().getTime();
+    }
+
+    private void notificationCheck(Activity activity) {
+
+        if(activity.getIntent().hasExtra("Plumb5"))
+        {
+            notificationReceiver(activity.getApplicationContext(),activity.getIntent());
+        }else{
+            Log.d(TAG, "No Notification Extra");
+        }
     }
 
     public static String getP5Session() {
@@ -566,6 +578,213 @@ public class P5LifeCycle implements Application.ActivityLifecycleCallbacks {
 
         }
     };
+
+
+    public void notificationReceiver(Context context, Intent intent){
+
+        try {
+            String AppKey = P5.p5GetAppKey();
+            String PackAge = context.getPackageName();
+            if (context.getPackageName().toLowerCase().contains(PackAge.toLowerCase()) && AppKey.length() > 0) {
+                Bundle bdl = intent.getExtras();
+                String getName = bdl.getString("btnname");
+                String getValue = bdl.getString("ebtnpram");
+                String getExtraValue = bdl.getString("ebtnpramvalue");
+                String screen = bdl.getString("screenName");
+                int getPushId = bdl.getInt("PushId");
+                String workflowid = bdl.getString("workflowid");
+                String P5UniqueId = "";
+                if (bdl.containsKey("P5UniqueId")) {
+                    if (bdl.get("P5UniqueId") != null) {
+                        P5UniqueId = bdl.get("P5UniqueId").toString();
+                    } else {
+                        P5UniqueId = "0";
+                    }
+                } else {
+                    P5UniqueId = "0";
+                }
+
+                String getAction = intent.getAction();
+                //Log.i("HI", context+"/"+getValue + "/" + getExtraValue+"/"+getAction);
+
+                String pkg = context.getPackageName();
+                int click = 1, close = 0;
+                if (getAction.equals(pkg + ".0")) {
+                    click = 0;
+                    close = 1;
+                } else if (getAction.equals(pkg + ".1") || getAction.equals(pkg + ".2")) {
+                    Intent sIntent = new Intent();
+                    String nIntent = getValue, Parameter = getExtraValue;
+
+
+                    if (Parameter.contains(",")) {
+                        String[] paText = Parameter.split("\\,");
+                        for (int i = 0; i < paText.length; i++) {
+                            String[] paTextValue = paText[i].split("\\=");
+                            sIntent.putExtra(paTextValue[0], paTextValue[1]);
+                        }
+                    } else if (Parameter.indexOf('=') > 0 && Parameter.length() > 1) {
+                        String[] paTextValue = Parameter.split("\\=");
+                        sIntent.putExtra(paTextValue[0], paTextValue[1]);
+                    }
+
+
+                    if (getAction.equals(pkg + ".1")) {
+                        sIntent.setClassName(context, nIntent);
+                        sIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        if (P5.isP5IntentAvailable(context, sIntent)) {
+                            context.startActivity(sIntent);
+                        } else {
+                            Log.d(TAG, "wrong intent.");
+                        }
+                    } else {
+                        int lene = nIntent.lastIndexOf('.');
+                        sIntent.setComponent(new ComponentName(nIntent.substring(0, lene), nIntent));
+                        sIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(sIntent);
+                    }
+
+                } else if (getAction.equals(pkg + ".3") && getValue.contains("http")) {
+                    Uri uri = Uri.parse(getValue);
+                    intent = new Intent(Intent.ACTION_VIEW, uri);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } else if (getAction.equals(pkg + ".4")) {
+                    Toast.makeText(context, "Copied successfully.", Toast.LENGTH_SHORT).show();
+                    ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clipData = ClipData.newPlainText("text label", getValue);
+                    clipboardManager.setPrimaryClip(clipData);
+                } else if (getAction.equals(pkg + ".5")) {
+                    if (checkCallPermission(context)) {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:" + getValue));
+                        callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(callIntent);
+                    }
+                } else if (getAction.equals(pkg + ".6")) {
+
+                    String app_name = context.getApplicationInfo().loadLabel(context.getPackageManager()).toString();
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getValue.toString());
+                    sharingIntent.putExtra(Intent.EXTRA_TEXT, getExtraValue.toString());
+
+                    Intent iShare = Intent.createChooser(sharingIntent, "Share via " + app_name);
+                    iShare.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(iShare);
+
+                } else if (getAction.equals(pkg + ".7")) {
+
+                    Intent intent1 = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    context.startActivity(intent1);
+
+                    Intent aintent = new Intent(pkg + ".alarm");
+                    aintent.putExtra("alarmtxt", getExtraValue.toString());
+                    PendingIntent pendingAlarmIntent = PendingIntent.getBroadcast(context, 0, aintent, 0);
+                    AlarmManager alarmManager = (AlarmManager) (context.getSystemService(Context.ALARM_SERVICE));
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 60000 * Integer.parseInt(getValue.toString()), pendingAlarmIntent);
+
+                    //alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, pendingAlarmIntent);
+                } else if (getAction.equals(pkg + ".8")) {
+
+                    Offline = 1;
+                    P5ConnectionDetector cd = new P5ConnectionDetector(context.getApplicationContext());
+                    Boolean isInternetPresent = cd.isConnectingToInternet();
+                    if (isInternetPresent) {
+                        Offline = 0;
+                    }
+                    JSONArray jsonEventDate = new JSONArray();
+                    JSONObject json = new JSONObject();
+                    try {
+
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date = new Date();
+                        json.put(P5Constants.SESSION_ID, P5LifeCycle.getP5Session());
+                        json.put(P5Constants.DEVICE_ID, P5.getDeviceId(context));
+                        json.put(P5Constants.TYPE, "Custom-Push-Event");
+                        json.put(P5Constants.NAME, getValue);
+                        json.put(P5Constants.VALUE, getExtraValue);
+                        json.put(P5Constants.OFFLINE, Offline);
+                        json.put(P5Constants.TRACK_DATE, dateFormat.format(date));
+                        jsonEventDate.put(json);
+
+                    } catch (JSONException ignored) {
+                    }
+                    if (Offline == 0) {
+
+                        JSONObject finaljson = new JSONObject();
+                        try {
+                            finaljson.put(P5Constants.APP_KEY_POST, P5.p5GetAppKey());
+                            finaljson.put(P5Constants.EVENT_DATA_KEY, jsonEventDate);
+                            //eng.p5SetEventJsonData();
+
+                        } catch (JSONException ignored) {
+                        }
+                        String result = finaljson.toString();
+                        //Log.d("Plumb52event", result);
+                        //  new P5HttpRequest(context, eng.p5GetServiceUrl(getactivity) + getactivity.getResources().getString(R.string.EVENT), result).execute();
+                        callEventSend(result, context);
+                    }
+                } else if (getAction.equals(pkg + ".9")) {
+
+                    String sms = "";
+                    if (getExtraValue.length() > 0) {
+                        sms = getExtraValue.toString();
+                    }
+                    Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+                    smsIntent.setData(Uri.parse("smsto:" + getValue.toString()));
+                    smsIntent.putExtra("sms_body", sms.toString());
+                    smsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(smsIntent);
+
+                } else if (getAction.equals(pkg + ".10")) {
+
+//                    Intent intent1 = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+//                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                    context.startActivity(intent1);
+
+
+                    P5.screenRoute(new JSObject().put("routeUrl",screen));
+
+                }
+
+                //Insert loading................
+                JSONObject json = new JSONObject();
+                try {
+
+                    json.put("AppKey", AppKey);
+                    json.put("MobileFormId", getPushId);
+                    json.put("DeviceId", P5.getDeviceId(context));
+                    json.put("SessionId", P5LifeCycle.getP5Session());
+                    json.put("FormResponses", "Push");
+                    json.put("BannerView", 0);
+                    json.put("BannerClick", click);
+                    json.put("BannerClose", close);
+                    json.put("ButtonName", getName);
+                    json.put("WorkFlowDataId", workflowid);
+                    json.put("SendReport", 0);
+                    json.put("P5UniqueId", P5UniqueId);
+                    json.put("ButtonName", "");
+                    json.put("WidgetName", "");
+                    String getresult = json.toString().replace("\\", "").replace("\"{", "{").replace("}\"", "}");
+                    //Log.d(TAG, getresult);
+                    // new P5HttpRequest(context, eng.p5GetServiceUrl(getactivity) +getactivity.getResources().getString(R.string.FORM_RESPONSES), getresult).execute();
+                    callPushSend(context, new ObjectMapper().readValue(getresult, HashMap.class));
+                } catch (JSONException ignored) {
+                }
+
+                if (getAction.equals(pkg + ".0") || getAction.equals(pkg + ".3")) {
+                    NotificationManager notificationManager = (NotificationManager) getactivity.getSystemService(NOTIFICATION_SERVICE);
+                    notificationManager.cancel(getPushId);
+                }
+                //Toast.makeText(context, getValue + " Action: " + intent.getAction(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception ex) {
+            Log.d(TAG, ex.getMessage());
+        }
+
+    }
 
     private boolean checkCallPermission(Context activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
