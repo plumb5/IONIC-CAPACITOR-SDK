@@ -1,6 +1,6 @@
 {
   "name": "plumb5-sdk",
-  "version": "0.0.7",
+  "version": "0.7",
   "description": "sdk",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
