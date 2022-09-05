@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 
-import com.chuckerteam.chucker.api.ChuckerInterceptor;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,18 +46,18 @@ public class ServiceGenerator {
                     new AuthenticationInterceptor(authToken, authId);
 
 
-            ChuckerInterceptor   chuckerInterceptor = new ChuckerInterceptor.Builder(P5LifeCycle.getactivity)
-
-                    .maxContentLength(250_000L)
-
-
-                    .alwaysReadResponseBody(true)
-
-
-                    .build();
+//            ChuckerInterceptor   chuckerInterceptor = new ChuckerInterceptor.Builder(P5LifeCycle.getactivity)
+//
+//                    .maxContentLength(250_000L)
+//
+//
+//                    .alwaysReadResponseBody(true)
+//
+//
+//                    .build();
 
             if (!httpClient.interceptors().contains(interceptor)) {
-                httpClient.addInterceptor(chuckerInterceptor);
+//                httpClient.addInterceptor(chuckerInterceptor);
                 httpClient.addInterceptor(interceptor);
 
 
