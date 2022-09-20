@@ -109,7 +109,7 @@ public class P5SendNotification {
             //Log.d("p5", nIntent + "nn" + Parameter);
 
             PendingIntent pIntent = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             } else {
@@ -175,7 +175,7 @@ public class P5SendNotification {
                             btnReceive.setAction(context.getPackageName() + "." + actionno);
 
                             PendingIntent pendingIntentYes = null;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                 pendingIntentYes = PendingIntent.getActivity(context, 0, btnReceive, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                             } else {
