@@ -126,23 +126,16 @@ public class Plumb5Plugin: CAPPlugin {
         if P5SDKManager.sharedInstance.checkNetworkRecheablity() {
             P5ServiceManager.sharedInstance.sendPostRequestWithURL(url: url, paramDict: trackData) { (result, success) in
                 if success == true && result != nil {
-//                    if P5SDKManager.sharedInstance.inappQueue.count > 0{
-                        P5SDKManager.showInAppBannerDialog(screenName: P5SDKManager.sharedInstance.inappQueue)
-//                    }
-                
-                
-                        P5SDKManager.loadBanner(screenName:  P5SDKManager.sharedInstance.bannerQueue, bannerView:  P5SDKManager.sharedInstance.bannerView!, delegate:  P5SDKManager.sharedInstance.bannerDelegate!)
-                   
+
                  
                 }
                 else {
                     print("Error")
                 }
-                P5SDKManager.sharedInstance.isPushingOfflineDataIsInProgress = false
+             
             }
         }else{
-            //Offline
-            P5SDKManager.sharedInstance.isPushingOfflineDataIsInProgress = false
+ 
         }
 
 
@@ -171,11 +164,10 @@ public class Plumb5Plugin: CAPPlugin {
                                 else {
                                     print("Error")
                                 }
-                                P5SDKManager.sharedInstance.isPushingOfflineDataIsInProgress = false
+                        
                             }
                         }else{
-                            //Offline
-                            P5SDKManager.sharedInstance.isPushingOfflineDataIsInProgress = false
+                      
                         }
 
                          
@@ -214,6 +206,35 @@ public class Plumb5Plugin: CAPPlugin {
                     print("Error")
                 }
             }
+        }
+    }
+    
+    @objc   func pushResponse(_ call: CAPPluginCall){
+     
+        let param = [
+                     Constants.key_FieldType : "1",
+                     Constants.key_DeviceId: P5DeviceInfo.sharedInstance.getDeviceId(),
+                     Constants.key_SessionId: P5SessionId.sharedInstance.getSessionId(),
+                     Constants.key_ScreenName:call.getString("ScreenName",""),
+            Constants.key_EventId:"",
+            Constants.key_EventValue:"",
+            Constants.key_PageParameter:call.getString("PageParameter","")]
+       
+        let url = Constants.base_url + Constants.api_GetField
+        
+        if P5SDKManager.sharedInstance.checkNetworkRecheablity(){
+            P5ServiceManager.sharedInstance.sendGetRequestWithURL(url: url, paramDict: param) { (result, success) in
+                if success == true && result != nil {
+                    let response = result as! NSDictionary
+//                    let array = result as? Array<Any>
+                    P5SDKManager.sharedInstance.processGetFieldData(array: response,screenName: call.getString("ScreenName",""))
+                }
+                else {
+                    print("Error")
+                }
+            }
+        }else{
+            print("No Network");
         }
     }
     

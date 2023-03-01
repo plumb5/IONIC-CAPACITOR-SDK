@@ -343,7 +343,7 @@ public class P5DialogBox {
                 } else if (fieldType.equals("Cb")) {
                     String[] texts = fieldText.split(",");
                     for (int i = 0; i < texts.length; i++) {
-                        Log.e("", "" + fieldText);
+                        Log.d("", "" + fieldText);
                         if (i == 0) {
                             diagLayout.addView(getCheckBox(fieldNo, texts[i], fieldSize, fieldColor));
                         } else {
@@ -417,9 +417,9 @@ public class P5DialogBox {
                     json.put("ButtonName", "");
                     json.put("WidgetName", "");
                 } catch (JSONException e) {
-                    Log.e(TAG, " DialogBox push details failed");
+                    Log.d(TAG, " DialogBox push details failed");
                     e.printStackTrace();
-                    Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+                    Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
                 }
 
                 String getresult = json.toString().replace("\\", "").replace("\"{", "{").replace("}\"", "}");
@@ -537,9 +537,9 @@ public class P5DialogBox {
 
         } catch (Throwable e) {
             Log.d(TAG, "something goes wrong.");
-            Log.e(TAG, " DialogBox push details failed");
+            Log.d(TAG, " DialogBox push details failed");
             e.printStackTrace();
-            Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+            Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
         }
 
     }
@@ -554,7 +554,7 @@ public class P5DialogBox {
                 if (p5dialog != null)
                     p5dialog.show();
             } catch (Throwable e) {
-                Log.e(TAG, " DialogBox show failed");
+                Log.d(TAG, " DialogBox show failed");
                 e.printStackTrace();
 
             }
@@ -954,9 +954,9 @@ public class P5DialogBox {
                 }
             }.start();
         } catch (Exception e) {
-            Log.e(TAG, " DialogBox push details failed");
+            Log.d(TAG, " DialogBox push details failed");
             e.printStackTrace();
-            Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+            Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
 
         }
         allFields.add(Position, text);
@@ -1020,9 +1020,9 @@ public class P5DialogBox {
                     json.put("WidgetName", "");
 
                 } catch (JSONException e) {
-                    Log.e(TAG, " DialogBox push details failed");
+                    Log.d(TAG, " DialogBox push details failed");
                     e.printStackTrace();
-                    Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+                    Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
                 }
                 String fresult = json.toString().replace("\\", "").replace("\"{", "{").replace("}\"", "}");
                 TextView p5textView = new TextView(context);
@@ -1030,9 +1030,9 @@ public class P5DialogBox {
                 try {
                     new P5LifeCycle().callPushSend(context, new ObjectMapper().readValue(fresult, HashMap.class));
                 } catch (IOException e) {
-                    Log.e(TAG, " DialogBox push details failed");
+                    Log.d(TAG, " DialogBox push details failed");
                     e.printStackTrace();
-                    Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+                    Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
                 }
                 P5dialogdismiss();
             }
@@ -1061,7 +1061,7 @@ public class P5DialogBox {
 
             }
 
-            //  Log.i("HI", getAll+"/"+getCloseDialog);
+            //  Log.d("HI", getAll+"/"+getCloseDialog);
 
             if (formSubmit == 1) {
                 getName = "Form";
@@ -1095,7 +1095,7 @@ public class P5DialogBox {
                         if (new P5ConnectionDetector(context).isConnectingToInternet()) {
                             P5dialogdismiss();
 
-                            eng.getBridge().triggerJSEvent("onPushNotification", "window", "{ 'routeUrl': "+Redirect+" }");
+                            eng.screenRoute( Redirect,P5LifeCycle._bridge);
 
                         } else {
                             Log.d("p5", "No internet");
@@ -1104,7 +1104,7 @@ public class P5DialogBox {
                         int lene = getRedirect.lastIndexOf('.');
                         intent.setComponent(new ComponentName(getRedirect.substring(0, lene), getRedirect));
                         P5dialogdismiss();
-                        eng.getBridge().triggerJSEvent("onPushNotification", "window", "{ 'routeUrl': "+Redirect+" }");
+                        eng.screenRoute( Redirect,P5LifeCycle._bridge);
                     }
                 } else if (getAction.equals("Browser") && getRedirect.contains("http")) {
                     Uri uri = Uri.parse(getRedirect);
@@ -1171,9 +1171,9 @@ public class P5DialogBox {
                         json.put("P5UniqueId","");
 
                     } catch (JSONException e) {
-                        Log.e(TAG, " DialogBox push details failed");
+                        Log.d(TAG, " DialogBox push details failed");
                         e.printStackTrace();
-                        Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+                        Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
                     }
 
                     String fresult = json.toString().replace("\\", "").replace("\"{", "{").replace("}\"", "}");
@@ -1196,9 +1196,9 @@ public class P5DialogBox {
 
         } catch (Throwable e) {
             Log.d(TAG, "something goes wrong");
-            Log.e(TAG, " DialogBox push details failed");
+            Log.d(TAG, " DialogBox push details failed");
             e.printStackTrace();
-            Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+            Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
         }
 
     }
@@ -1338,9 +1338,9 @@ public class P5DialogBox {
                     json.put("WorkFlowDataId",0);
                     json.put("P5UniqueId","");
                 } catch (JSONException e) {
-                    Log.e(TAG, " DialogBox push details failed");
+                    Log.d(TAG, " DialogBox push details failed");
                     e.printStackTrace();
-                    Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+                    Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
                 }
 
                 String result = json.toString().replace("\\", "").replace("\"{", "{").replace("}\"", "}");
@@ -1351,9 +1351,9 @@ public class P5DialogBox {
                 try {
                     new P5LifeCycle().callPushSend(context, new ObjectMapper().readValue(result, HashMap.class));
                 } catch (IOException e) {
-                    Log.e(TAG, " DialogBox push details failed");
+                    Log.d(TAG, " DialogBox push details failed");
                     e.printStackTrace();
-                    Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+                    Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
                 }
                 fresult = 1;
 
@@ -1363,9 +1363,9 @@ public class P5DialogBox {
             }
         } catch (JSONException e) {
             Toast.makeText(context, "Something goes wrong", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, " DialogBox push details failed");
+            Log.d(TAG, " DialogBox push details failed");
             e.printStackTrace();
-            Log.e(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
+            Log.d(TAG, "Please check the parameters \n error -" + e.getLocalizedMessage());
         }
         return fresult;
     }

@@ -11,6 +11,7 @@ import CoreLocation
 import MessageUI
 import UIKit
 
+
 import UserNotifications
 
 public enum Actions : String{
@@ -636,7 +637,7 @@ public class P5SDKManager : P5LocationDelegate {
                 print("getFormData got response");
                 if success == true && result != nil {
                     let array = result as? Array<Any>
-                    self.processGetFieldData(array: array!,screenName: screenName)
+//                    self.processGetFieldData(array: array!,screenName: screenName)
                     
                 }
                 else {
@@ -663,7 +664,7 @@ public class P5SDKManager : P5LocationDelegate {
             P5ServiceManager.sharedInstance.sendGetRequestWithURL(url: url, paramDict: param) { (result, success) in
                 if success == true && result != nil {
                     let array = result as? Array<Any>
-                    self.processGetFieldData_Banner(array: array!,imageView: imageView/*, closeBtn: closeBtn*/)
+//                    self.processGetFieldData_Banner(array: array!,imageView: imageView/*, closeBtn: closeBtn*/)
                 }
                 else {
                     print("Error")
@@ -674,15 +675,13 @@ public class P5SDKManager : P5LocationDelegate {
         }
     }
     
-    func processGetFieldData(array : Array<Any>,screenName:String){
-        let obj = array[0] as! NSDictionary;
-        let Status = obj.value(forKey: "Status") as! Bool
-        if Status {
-            createDialog(object: obj,screenName: screenName)
-        }
+    func processGetFieldData(array : NSDictionary,screenName:String){
+      
+            createDialog(object: array,screenName: screenName)
+       
         
     }
-    func processGetFieldData_Banner(array : Array<Any>, imageView: P5BannerView/*, closeBtn: UIButton*/){
+    func processGetFieldData_Banner(array : NSDictionary, imageView: P5BannerView/*, closeBtn: UIButton*/){
         let obj = array[0] as! NSDictionary;
         let Status = obj.value(forKey: "Status") as! Bool
         if Status {
@@ -1115,9 +1114,7 @@ public class P5SDKManager : P5LocationDelegate {
     
     public class func updateFormResponse(mobileFormID : Any, formResponse : String, bannerView: String, bannerClick : String, bannerClose : String, btnName : String, geofenceName : String, beaconName:String, screenName:String, widgetName:String)
     {
-        if P5SDKManager.sharedInstance.p5BundleIdentifier == nil {
-            print("Invalid Packagename")
-        }else{
+     
             var params : Dictionary <String, Any> = Dictionary()
             params.updateValue(mobileFormID, forKey: Constants.key_MobileFormId)
             params.updateValue(formResponse, forKey: Constants.key_FormResponses)
@@ -1128,15 +1125,9 @@ public class P5SDKManager : P5LocationDelegate {
                params.updateValue(btnName, forKey: Constants.key_ButtonName)
             }
             
-            if geofenceName.count > 0 {
-               params.updateValue(geofenceName, forKey: Constants.key_GeofenceName)
-            }
-            if beaconName.count > 0 {
-              params.updateValue(beaconName, forKey: Constants.key_BeaconName)
-            }
+       
             
             
-            params.updateValue(P5SDKManager.sharedInstance.p5getAppKey, forKey: Constants.key_AppKey)
             params.updateValue(P5SessionId.sharedInstance.getSessionId(), forKey: Constants.key_SessionId)
             params.updateValue(P5DeviceInfo.sharedInstance.getDeviceId(), forKey: Constants.key_DeviceId)
             params.updateValue("0", forKey: "SendReport")
@@ -1144,6 +1135,8 @@ public class P5SDKManager : P5LocationDelegate {
             if screenName.count > 0{
                 params.updateValue(screenName, forKey: "ScreenName")
             }
+            params.updateValue("0", forKey: "WorkFlowDataId")
+            params.updateValue("0", forKey: "P5UniqueId")
             
             print("params = %@",params)
             let url = Constants.base_url + Constants.api_formResponses
@@ -1161,7 +1154,7 @@ public class P5SDKManager : P5LocationDelegate {
             }
 
 
-        }
+        
     }
     
 }

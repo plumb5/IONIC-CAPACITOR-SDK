@@ -15,15 +15,22 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.getcapacitor.Bridge;
 import com.getcapacitor.JSObject;
+import com.getcapacitor.MessageHandler;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginHandle;
 import com.getcapacitor.PluginMethod;
+import com.getcapacitor.WebViewListener;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.google.android.gms.common.ConnectionResult;
@@ -32,6 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -41,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import okhttp3.ResponseBody;
@@ -103,6 +112,8 @@ public class Plumb5Plugin extends Plugin {
     private static String gcmRegistrationId = "";
     private static String uniqueID = null;
     public ServiceGenerator.API api;
+    Bridge myBridge;
+
 
 
     private static String getScreenResolution(Context context) {
@@ -186,7 +197,7 @@ public class Plumb5Plugin extends Plugin {
                 userDetails.put(P5Constants.DEVICE_ID, getDeviceId(this.bridge.getActivity()));
 
             } catch (Exception e) {
-                Log.v(TAG, "Please check the parameters \n error -");
+                Log.d(TAG, "Please check the parameters \n error -");
                 e.printStackTrace();
                 callbackContext.reject("Please check the parameters \n error -" + e.getLocalizedMessage());
             }
@@ -198,19 +209,19 @@ public class Plumb5Plugin extends Plugin {
                         if (response.isSuccessful()) {
 
 
-                            Log.v(TAG, "User details sent successful");
+                            Log.d(TAG, "User details sent successful");
                             callbackContext.resolve();
                         } else {
 
-                            Log.e(TAG, "User details  failed");
+                            Log.d(TAG, "User details  failed");
                             callbackContext.reject("User details  failed");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG, "User details failed");
-                        Log.e(TAG, t.getMessage());
+                        Log.d(TAG, "User details failed");
+                        Log.d(TAG, t.getMessage());
                         callbackContext.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                         t.printStackTrace();
                     }
@@ -225,6 +236,11 @@ public class Plumb5Plugin extends Plugin {
 
     @Override
     public void load() {
+
+        myBridge = bridge;
+        P5LifeCycle._bridge = getBridge();
+
+
         SharedPreferences.Editor sharedPreferences = this.getBridge().getActivity()
                 .getSharedPreferences(P5Constants.P5_INIT_KEY, 0)
                 .edit();
@@ -243,10 +259,12 @@ public class Plumb5Plugin extends Plugin {
         });
 
 
-        accountId = getConfig().getString(P5Constants.PLUMB5_ACCOUNT_ID);
-        serviceURL = getConfig().getString(P5Constants.PLUMB5_BASE_URL);
-        appKey = getConfig().getString(P5Constants.PLUMB5_API_KEY);
-        api = ServiceGenerator.createService(ServiceGenerator.API.class, appKey, accountId, serviceURL);
+        accountId = getMetadata(this.bridge.getActivity(), P5Constants.PLUMB5_ACCOUNT_ID);
+        serviceURL = getMetadata(this.bridge.getActivity(), P5Constants.PLUMB5_BASE_URL);
+        appKey = getMetadata(this.bridge.getActivity(), P5Constants.PLUMB5_API_KEY);
+        api = ServiceGenerator.getRetrofitInstance( appKey, accountId, serviceURL).create(ServiceGenerator.API.class);
+        Log.d(TAG, "onLoad");
+        getBridge().getContext().getSharedPreferences(P5Constants.P5_INIT_KEY, 0).edit().putBoolean("appClose",true).apply();;
 
     }
 
@@ -266,7 +284,7 @@ public class Plumb5Plugin extends Plugin {
                 editor.apply();
 
             } else {
-                Log.v(TAG, "Plumb5 initialized succusfuly");
+                Log.d(TAG, "Plumb5 initialized succusfuly");
             }
             Call<ResponseBody> call = api.PackageInfo();
             call.enqueue(new Callback<ResponseBody>() {
@@ -289,26 +307,26 @@ public class Plumb5Plugin extends Plugin {
 
                         // user object available
 //                        if (pref.getBoolean("isNew", true)) {
-//                            Log.v(TAG, "New user");
+//                            Log.d(TAG, "New user");
 //
 ////                                deviceRegistration(callbackContext);
 ////
 //
 //                        } else {
-//                            Log.v(TAG, "Existing user");
+//                            Log.d(TAG, "Existing user");
 //
 //                        }
 
                     } else {
-                        Log.v(TAG, "Network call fail error ");
+                        Log.d(TAG, "Network call fail error ");
                         plugin.reject("Network call fail error ");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e(TAG, "PackageInfo failed");
-                    Log.e(TAG, t.getMessage());
+                    Log.d(TAG, "PackageInfo failed");
+                    Log.d(TAG, t.getMessage());
                     plugin.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                     t.printStackTrace();
 
@@ -352,7 +370,7 @@ public class Plumb5Plugin extends Plugin {
 
 
             } catch (Exception e) {
-                Log.v(TAG, "Please check the parameters \n error -");
+                Log.d(TAG, "Please check the parameters \n error -");
                 e.printStackTrace();
                 callbackContext.reject("Please check the parameters \n error -" + e.getLocalizedMessage());
             }
@@ -364,19 +382,19 @@ public class Plumb5Plugin extends Plugin {
                         if (response.isSuccessful()) {
 
 
-                            Log.v(TAG, "Tracking details sent successful");
+                            Log.d(TAG, "Tracking details sent successful");
                             callbackContext.resolve();
                         } else {
 
-                            Log.e(TAG, "Tracking details  failed");
+                            Log.d(TAG, "Tracking details  failed");
                             callbackContext.reject("Tracking details  failed");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Log.e(TAG, "Tracking details failed");
-                        Log.e(TAG, t.getMessage());
+                        Log.d(TAG, "Tracking details failed");
+                        Log.d(TAG, t.getMessage());
                         callbackContext.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                         t.printStackTrace();
                     }
@@ -387,10 +405,7 @@ public class Plumb5Plugin extends Plugin {
         }
     }
 
-    @PluginMethod
-    public void notificationSubscribe(String notificationSubscribeVF, PluginCall callbackContext) {
-        callbackContext.resolve();
-    }
+
 
     @PluginMethod
     public void eventPost(PluginCall callbackContext) {
@@ -420,19 +435,19 @@ public class Plumb5Plugin extends Plugin {
                     if (response.isSuccessful()) {
 
                         //  new P5GetDialogHttpRequest(activity, eng.p5GetServiceUrl(activity), Name, Value, "").execute();
-                        Log.v(TAG, "Event details sent successful");
+                        Log.d(TAG, "Event details sent successful");
                         callbackContext.resolve();
                     } else {
 
-                        Log.e(TAG, "Event details  failed");
+                        Log.d(TAG, "Event details  failed");
                         callbackContext.reject("Event details  failed");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    Log.e(TAG, "Event details failed");
-                    Log.e(TAG, t.getMessage());
+                    Log.d(TAG, "Event details failed");
+                    Log.d(TAG, t.getMessage());
                     callbackContext.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                     t.printStackTrace();
                 }
@@ -471,7 +486,7 @@ public class Plumb5Plugin extends Plugin {
                             final String getContent = jsonObject.get("FormContent").toString();
                             String WidgetName = jsonObject.get("WidgetName").toString();
                             int MobileFormId = Integer.parseInt(jsonObject.get("MobileFormId").toString());
-                            Log.v(TAG, "InApp details sent successful");
+                            Log.d(TAG, "InApp details sent successful");
                             if (!getContent.equals("")) {
                                 P5DialogBox v = new P5DialogBox();
                                 v.dialogBox(bridge.getActivity(), getContent, serviceURL, MobileFormId, WidgetName);
@@ -483,54 +498,51 @@ public class Plumb5Plugin extends Plugin {
 
 
                         } catch (Exception ex) {
-                            Log.e(TAG, "InApp details json failed");
-                            Log.e(TAG, ex.getMessage());
+                            Log.d(TAG, "InApp details json failed");
+                            Log.d(TAG, ex.getMessage());
                             callbackContext.reject("JSON failed - " + ex.getMessage() + "\n stack trace - ");
                             ex.printStackTrace();
                         }
                     } else {
 
-                        Log.e(TAG, "InApp details  failed");
-                        Log.e(TAG, response.errorBody().toString());
+                        Log.d(TAG, "InApp details  failed");
+                        Log.d(TAG, response.errorBody().toString());
                         callbackContext.reject("InApp details  failed");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e(TAG, "InApp details failed");
-                    Log.e(TAG, t.getMessage());
+                    Log.d(TAG, "InApp details failed");
+                    Log.d(TAG, t.getMessage());
                     callbackContext.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                     t.printStackTrace();
                 }
             });
         } else {
-
+            Log.d(TAG, "PLUMB5 SDK CANNOT BE INITIATED, PACKAGE NAME DOES NOT MATCH");
         }
     }
 
-    public void screenRoute(JSObject jsonObject) {
-        notifyListeners("appUrlOpen", jsonObject);
-    }
 
     private void checkUser(PluginCall callbackContext, JSONObject jsonObject) {
 
         if (null != jsonObject && jsonObject.length() > 0) {
 
             try {
-              SharedPreferences.Editor sharedPreferences = getContext()
-                .getSharedPreferences(P5Constants.P5_INIT_KEY, 0)
-                .edit();
+                SharedPreferences.Editor sharedPreferences = getContext()
+                        .getSharedPreferences(P5Constants.P5_INIT_KEY, 0)
+                        .edit();
                 projectNumber = jsonObject.getString("GcmProjectNo");
                 packageName = jsonObject.getString("PackageName");
                 if (packageName.equals(this.bridge.getActivity().getPackageName())) {
-                  sharedPreferences.putBoolean("isSDK-Valid", true).apply();
-                  Log.i(TAG, "PLUMB5 SDK  INITIATED");
+                    sharedPreferences.putBoolean("isSDK-Valid", true).apply();
+                    Log.d(TAG, "PLUMB5 SDK  INITIATED");
 
                     deviceRegistration(callbackContext);
                 } else {
-                  sharedPreferences.putBoolean("isSDK-Valid", false).apply();
-                  Log.i(TAG, "PLUMB5 SDK CANNOT BE INITIATED, PACKAGE NAME DOES NOT MATCH");
+                    sharedPreferences.putBoolean("isSDK-Valid", false).apply();
+                    Log.d(TAG, "PLUMB5 SDK CANNOT BE INITIATED, PACKAGE NAME DOES NOT MATCH");
                 }
 
             } catch (Exception e) {
@@ -539,23 +551,6 @@ public class Plumb5Plugin extends Plugin {
         }
     }
 
-//    public String getMetadata(Context context, String key) {
-//
-//
-//        try {
-//            return Objects.requireNonNull(context.getPackageManager().getApplicationInfo(
-//                    context.getPackageName(), PackageManager.GET_META_DATA).metaData.get(key)).toString();
-//
-//        } catch (PackageManager.NameNotFoundException e) {
-//            Log.e(TAG,
-//                    "Failed to load meta-data, NameNotFound: " + e.getMessage());
-//            return null;
-//        } catch (NullPointerException e) {
-//            Log.e(TAG,
-//                    "Failed to load meta-data, NullPointer: " + e.getMessage());
-//            return null;
-//        }
-//    }
 
     @PluginMethod
     public void deviceRegistration(PluginCall callbackContext) {
@@ -587,7 +582,7 @@ public class Plumb5Plugin extends Plugin {
                 json.put("IsInstalledStatusDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH).format(new Date()));
 
             } catch (Exception e) {
-                Log.v(TAG, "Please check the parameters \n error -");
+                Log.d(TAG, "Please check the parameters \n error -");
                 Log.d(TAG, "Please check json" + e.getLocalizedMessage());
                 callbackContext.reject("Please check the parameters \n error -" + e.getLocalizedMessage());
             }
@@ -599,20 +594,20 @@ public class Plumb5Plugin extends Plugin {
                     if (response.isSuccessful()) {
 
                         editor.putBoolean(P5Constants.IS_NEW, true);
-                        Log.v(TAG, "Device registration successful");
+                        Log.d(TAG, "Device registration successful");
 
                         callbackContext.resolve();
                     } else {
                         editor.putBoolean(P5Constants.IS_NEW, false);
-                        Log.e(TAG, "Device registration failed");
+                        Log.d(TAG, "Device registration failed");
                         callbackContext.reject("Device registration failed");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    Log.e(TAG, "Device registration failed");
-                    Log.e(TAG, t.getMessage());
+                    Log.d(TAG, "Device registration failed");
+                    Log.d(TAG, t.getMessage());
                     callbackContext.reject("Network call fail error - " + t.getMessage() + "\n stack trace - ");
                     t.printStackTrace();
                 }
@@ -629,7 +624,7 @@ public class Plumb5Plugin extends Plugin {
         if (result != ConnectionResult.SUCCESS) {
             if (googleAPI.isUserResolvableError(result)) {
                 callbackContext.reject(googleAPI.getErrorString(result));
-                Log.i(TAG, "Google Play Services are not available.");
+                Log.d(TAG, "Google Play Services are not available.");
             }
 
             return false;
@@ -666,8 +661,51 @@ public class Plumb5Plugin extends Plugin {
 
     }
 
+    static String getMetadata(Context context, String key) {
 
+
+        try {
+            return Objects.requireNonNull(context.getPackageManager().getApplicationInfo(
+                    context.getPackageName(), PackageManager.GET_META_DATA).metaData.get(key)).toString();
+
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG,
+                    "Failed to load meta-data, NameNotFound: " + e.getMessage());
+            return null;
+        } catch (NullPointerException e) {
+            Log.e(TAG,
+                    "Failed to load meta-data, NullPointer: " + e.getMessage());
+            return null;
+        }
+    }
+    @PluginMethod
+    public void notificationSubscribe( PluginCall callbackContext) throws JSONException {
+        Log.d(TAG,"notificationSubscribe");
+        if (isSdkValid()) {
+             if(getBridge().getContext().getSharedPreferences(P5Constants.P5_INIT_KEY, 0).getBoolean("appClose",false)) {
+                String routeURl =     P5LifeCycle.appCloseRoute;
+                 Log.d(TAG, "notificationSubscribe--->screen---->" + routeURl);
+                 P5LifeCycle._bridge.triggerWindowJSEvent("onPushNotification", new JSONObject().put("routeUrl",routeURl).toString());
+                 P5LifeCycle.appCloseRoute = "";
+                getContext().getSharedPreferences(P5Constants.P5_INIT_KEY, 0).edit().putBoolean("appClose", false).apply();
+
+             }
+
+        }
+        callbackContext.resolve();
+
+    }
+
+    public void screenRoute(String screen, Bridge bridge) throws JSONException {
+        Log.d(TAG, "screen---->" + screen);
+        JSONObject routeURL = new JSONObject();
+        routeURL.put("routeUrl", screen);
+        bridge.triggerWindowJSEvent("onPushNotification", routeURL.toString());
+        P5LifeCycle.appCloseRoute = screen;
+        Log.d(TAG, "sharedscreen---->" +     P5LifeCycle.appCloseRoute);
+    }
 }
+
 
 
 

@@ -70,9 +70,11 @@ public class P5PictureNotification  {
                         builder.setContentIntent(pIntent);
                         builder.setAutoCancel(true);
                         builder.setSound(alarmSound);
+
                         NotificationCompat.BigPictureStyle picStyle = new NotificationCompat.BigPictureStyle(builder);
                         picStyle.setBigContentTitle(title);
                         picStyle.bigPicture(bitmap);
+
                         if (nSubtext.length() > 0) {
                             picStyle.setSummaryText(nSubtext);
                         }

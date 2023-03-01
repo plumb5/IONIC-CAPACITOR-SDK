@@ -182,10 +182,11 @@ Please add this service in app manifiest and check the service avilablity
 
 <docgen-index>
 
-* [`echo(...)`](#echo)
+* [`addListener('onPushNotification', ...)`](#addlisteneronpushnotification)
 * [`initializePlumb5()`](#initializeplumb5)
 * [`deviceRegistration()`](#deviceregistration)
 * [`setUserDetails(...)`](#setuserdetails)
+* [`notificationSubscribe()`](#notificationsubscribe)
 * [`tracking(...)`](#tracking)
 * [`pushResponse(...)`](#pushresponse)
 * [`eventPost(...)`](#eventpost)
@@ -196,17 +197,18 @@ Please add this service in app manifiest and check the service avilablity
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### echo(...)
+### addListener('onPushNotification', ...)
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+addListener(eventName: 'onPushNotification', listenerFunc: (data: { routeUrl: string; }) => void) => PluginListenerHandle
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param              | Type                                                  |
+| ------------------ | ----------------------------------------------------- |
+| **`eventName`**    | <code>'onPushNotification'</code>                     |
+| **`listenerFunc`** | <code>(data: { routeUrl: string; }) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
 --------------------
 
@@ -238,6 +240,15 @@ setUserDetails(options: UserOptions) => Promise<void>
 | Param         | Type                                                |
 | ------------- | --------------------------------------------------- |
 | **`options`** | <code><a href="#useroptions">UserOptions</a></code> |
+
+--------------------
+
+
+### notificationSubscribe()
+
+```typescript
+notificationSubscribe() => Promise<void>
+```
 
 --------------------
 
@@ -282,6 +293,13 @@ eventPost(options: EventDetails) => Promise<void>
 
 
 ### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
 #### UserOptions

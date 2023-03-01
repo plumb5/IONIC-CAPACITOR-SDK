@@ -75,7 +75,7 @@ public class P5DialogPicture {
                 Log.d(TAG, "Check internet connection.");
             }
         } catch (Exception e) {
-            Log.i(TAG, "unknown error" + e.getMessage());
+            Log.d(TAG, "unknown error" + e.getMessage());
         }
 
     }
