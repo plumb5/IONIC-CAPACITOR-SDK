@@ -24,9 +24,9 @@
 
 import Foundation
 
-extension Notification.Name {
+public extension Notification.Name {
     /// Used as a namespace for all `URLSessionTask` related notifications.
-    public struct Task {
+    enum Task {
         /// Posted when a `URLSessionTask` is resumed. The notification `object` contains the resumed `URLSessionTask`.
         public static let DidResume = Notification.Name(rawValue: "org.alamofire.notification.name.task.didResume")
 
@@ -43,9 +43,9 @@ extension Notification.Name {
 
 // MARK: -
 
-extension Notification {
+public extension Notification {
     /// Used as a namespace for all `Notification` user info dictionary keys.
-    public struct Key {
+    enum Key {
         /// User info dictionary key representing the `URLSessionTask` associated with the notification.
         public static let Task = "org.alamofire.notification.key.task"
 

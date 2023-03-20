@@ -1,9 +1,10 @@
-import type { PluginListenerHandle } from '@capacitor/core';
-export interface Plumb5Plugin extends PluginListenerHandle {
-  addListener(eventName: 'onPushNotification', listenerFunc: (data:{ routeUrl: string }) => void): PluginListenerHandle;
+import type {  PluginListenerHandle } from '@capacitor/core';
+export interface Plumb5Plugin  {
+  addListener(eventName: 'onPushNotification', listenerFunc: (data:{ routeUrl: string }) => void):PluginListenerHandle ;
   initializePlumb5(): Promise<void>;
   deviceRegistration(): Promise<void>;
   setUserDetails(options: UserOptions): Promise<void>;
+  notificationSubscribe(options: { value: any }): Promise<void>;
   tracking(options: {
     ScreenName: string;
     PageParameter: any;

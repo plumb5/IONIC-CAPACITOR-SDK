@@ -705,11 +705,3 @@ public class Plumb5Plugin extends Plugin {
         Log.d(TAG, "sharedscreen---->" +     P5LifeCycle.appCloseRoute);
     }
 }
-
-
-
-
-
-
-
-

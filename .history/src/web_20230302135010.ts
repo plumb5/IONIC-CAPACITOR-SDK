@@ -23,10 +23,11 @@ export class Plumb5Web extends WebPlugin implements Plumb5Plugin {
   eventPost(_options: EventDetails): Promise<void> {
     return new Promise((resolve, _reject) => resolve);
   }
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  notificationSubscribe(_options: { value: any }):Promise<void> {
+    return new Promise((resolve, _reject) => resolve);
   }
+
+
    
  
 }

@@ -9,38 +9,40 @@
 import UIKit
 
 class VFRatingBar: P5BaseFromView {
-
-    @IBOutlet weak var lblField: UILabel!
-    @IBOutlet weak var vwRatitingButtonContainer: UIView!
+    @IBOutlet var lblField: UILabel!
+    @IBOutlet var vwRatitingButtonContainer: UIView!
     @objc var contentView: UIView!
-    
-    @IBInspectable var label:String = "" {
-        didSet{
-            if self.lblField != nil {
-                self.lblField?.text = label;
+
+    @IBInspectable var label: String = "" {
+        didSet {
+            if lblField != nil {
+                lblField?.text = label
             }
         }
-    };
-    var ratingValue:NSInteger! = 0;
-    
+    }
+
+    var ratingValue: NSInteger! = 0
+
     @objc var nibName: String {
         return String(describing: type(of: self))
     }
-    
-    //MARK:
+
+    // MARK:
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         loadViewFromNib()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
+
         loadViewFromNib()
     }
-    
-    //MARK:
+
+    // MARK:
+
     fileprivate func loadViewFromNib() {
         let frameWorkBundle = Bundle(for: type(of: self))
         contentView = frameWorkBundle.loadNibNamed(nibName, owner: self, options: nil)?[0] as? UIView
@@ -50,28 +52,31 @@ class VFRatingBar: P5BaseFromView {
     }
 
     @IBAction func btnRatingTapped(_ sender: UIButton) {
-        let tag = sender.tag;
-        setRating(tag);
+        let tag = sender.tag
+        setRating(tag)
     }
-    @objc func setRating(_ rating:NSInteger)  {
-        self.ratingValue = rating;
+
+    @objc func setRating(_ rating: NSInteger) {
+        ratingValue = rating
         for i in 1 ..< 6 {
-            let button = self.vwRatitingButtonContainer.viewWithTag(i) as! UIButton;
-            if i<=rating {
-                button.isSelected = true;
-            }else{
-                button.isSelected = false;
+            let button = vwRatitingButtonContainer.viewWithTag(i) as! UIButton
+            if i <= rating {
+                button.isSelected = true
+            } else {
+                button.isSelected = false
             }
         }
     }
+
     override func isFieldValid() -> Bool {
-        if self.ratingValue != 0{
+        if ratingValue != 0 {
             return true
-        }else{
+        } else {
             return false
         }
     }
+
     override func fieldValue() -> String {
-        return String(self.ratingValue);
+        return String(ratingValue)
     }
 }

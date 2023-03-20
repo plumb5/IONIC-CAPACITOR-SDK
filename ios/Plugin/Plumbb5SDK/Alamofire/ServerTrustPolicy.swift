@@ -59,7 +59,7 @@ open class ServerTrustPolicyManager {
 // MARK: -
 
 extension URLSession {
-    private struct AssociatedKeys {
+    private enum AssociatedKeys {
         static var managerKey = "URLSession.ServerTrustPolicyManager"
     }
 
@@ -67,7 +67,7 @@ extension URLSession {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.managerKey) as? ServerTrustPolicyManager
         }
-        set (manager) {
+        set(manager) {
             objc_setAssociatedObject(self, &AssociatedKeys.managerKey, manager, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
@@ -249,7 +249,6 @@ public enum ServerTrustPolicy {
             let unspecified = SecTrustResultType.unspecified
             let proceed = SecTrustResultType.proceed
 
-
             isValid = result == unspecified || result == proceed
         }
 
@@ -261,7 +260,7 @@ public enum ServerTrustPolicy {
     private func certificateData(for trust: SecTrust) -> [Data] {
         var certificates: [SecCertificate] = []
 
-        for index in 0..<SecTrustGetCertificateCount(trust) {
+        for index in 0 ..< SecTrustGetCertificateCount(trust) {
             if let certificate = SecTrustGetCertificateAtIndex(trust, index) {
                 certificates.append(certificate)
             }
@@ -279,7 +278,7 @@ public enum ServerTrustPolicy {
     private static func publicKeys(for trust: SecTrust) -> [SecKey] {
         var publicKeys: [SecKey] = []
 
-        for index in 0..<SecTrustGetCertificateCount(trust) {
+        for index in 0 ..< SecTrustGetCertificateCount(trust) {
             if
                 let certificate = SecTrustGetCertificateAtIndex(trust, index),
                 let publicKey = publicKey(for: certificate)

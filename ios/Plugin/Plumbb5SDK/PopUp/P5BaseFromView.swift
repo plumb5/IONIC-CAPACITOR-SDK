@@ -9,11 +9,11 @@
 import UIKit
 
 class P5BaseFromView: UIView {
-    
-    @objc public func isFieldValid() -> Bool{
-        return self.isFieldValid()
+    @objc public func isFieldValid() -> Bool {
+        return isFieldValid()
     }
-    @objc public func fieldValue() -> String{
-        return self.fieldValue()
+
+    @objc public func fieldValue() -> String {
+        return fieldValue()
     }
 }

@@ -12,7 +12,7 @@ CAP_PLUGIN(Plumb5Plugin, "Plumb5",
            CAP_PLUGIN_METHOD(eventPost, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(setUserDetails, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(pushResponse, CAPPluginReturnPromise);
-
+           
            CAP_PLUGIN_METHOD(register, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(checkPermissions, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(requestPermissions, CAPPluginReturnPromise);

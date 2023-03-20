@@ -9,11 +9,9 @@
 import Foundation
 
 struct Constants {
-    
     static let version = "2.0"
     static let base_url = Bundle.main.object(forInfoDictionaryKey: "serviceURL") as? String ?? ""
-  
-    
+
     static let key_manufacturer = "Manufacturer"
     static let key_name = "DeviceName"
     static let key_os = "IOs"
@@ -54,9 +52,7 @@ struct Constants {
     static let key_EventTrack_Name = "Name"
     static let key_EventTrack_Value = "Value"
     static let key_EventData = "EventData"
-    
-    
-    
+
     static let api_RegisterDevice = "DeviceRegistration"
     static let api_RegisterUser = "ContactDetails"
     static let api_initSession = "Tracking"
@@ -72,22 +68,22 @@ struct Constants {
     static let api_ValidatAppKeyNew = "PackageInfo"
     static let api_LogDataKey = "logData"
     static let api_EventResponses = "EventResponses"
-    
+
     static let value_ios = "iOS"
     static let value_apple = "Apple"
     static let value_wifi = "WiFi"
     static let value_offlineMode = "1"
     static let value_onlineMode = "0"
-    
+
     static let key_mobileCountryCode = "mobileCountryCode"
     static let key_mobileNetworkCode = "mobileNetworkCode"
     static let key_isoCountryCode = "isoCountryCode"
-    
+
     static let key_GeoLocations = "GeoLocations"
-    
-    
-    
-    //Inapp banner keys
+
+    static let key_pushidentifier = "P5pushAction"
+
+    // Inapp banner keys
     static let key_Position = "Position"
     static let key_Height = "Height"
     static let key_Action = "Action"
@@ -107,18 +103,18 @@ struct Constants {
     static let key_Name = "Name"
     static let key_Orientation = "Orientation"
     static let key_Padding = "Padding"
-    
+
     static let key_Parameter = "Parameter"
     static let key_Redirect = "Redirect"
     static let key_Score = "Score"
-    
+
     static let key_Size = "Size"
     static let key_Style = "Style"
     static let key_text = "Text"
     static let key_Type = "Type"
     static let key_Width = "Width"
     static let key_Animation = "Animation"
-    
+
     static let key_BeaconId = "BeaconId"
     static let key_PushId = "PushId"
     static let key_BeaconUuid = "BeaconUuid"
@@ -129,7 +125,7 @@ struct Constants {
     static let key_BeaconName = "BeaconName"
     static let key_SavedBeaconData = "beaconData"
     static let key_SavedBeaconNames = "beaconNames"
-    
+
     static let key_NotificationType = "keyNotifocation"
     static let key_NotificationType_Banner = "banner_notifocation"
     static let key_NotificationType_GeoFence = "geofence_notifocation"
@@ -152,24 +148,22 @@ struct Constants {
     static let key_MediaType = "media-type"
     static let key_Beacon = "Beacon"
     static let key_MobileFormId = "MobileFormId"
+    static let key_WorkFlowDataId = "WorkFlowDataId"
     static let key_FormResponses = "FormResponses"
     static let key_BannerView = "BannerView"
     static let key_BannerClick = "BannerClick"
     static let key_BannerClose = "BannerClose"
     static let key_ButtonName = "ButtonName"
     static let key_GeofenceName = "GeofenceName"
-    
 }
+
 extension Date {
-
- static func getCurrentDate() -> String {
-
+    static func getCurrentDate() -> String {
         let dateFormatter = DateFormatter()
 
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
         return dateFormatter.string(from: Date())
-
     }
 }
 

@@ -62,6 +62,7 @@
 		CAADF65A299E38F5000DFCDE /* P5SDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAADF659299E38F5000DFCDE /* P5SDKManager.swift */; };
 		CAADF65D299E398D000DFCDE /* P5LoactionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAADF65B299E398D000DFCDE /* P5LoactionInfo.swift */; };
 		CAADF66029A2403E000DFCDE /* P5DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAADF65F29A2403E000DFCDE /* P5DeviceInfo.swift */; };
+		CAC2D55729B0966800836EDF /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAC2D55629B0966800836EDF /* NotificationService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -134,6 +135,9 @@
 		CAADF659299E38F5000DFCDE /* P5SDKManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P5SDKManager.swift; sourceTree = "<group>"; };
 		CAADF65B299E398D000DFCDE /* P5LoactionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P5LoactionInfo.swift; sourceTree = "<group>"; };
 		CAADF65F29A2403E000DFCDE /* P5DeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P5DeviceInfo.swift; sourceTree = "<group>"; };
+		CAC2D55429B0966800836EDF /* fcmSer.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = fcmSer.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CAC2D55629B0966800836EDF /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		CAC2D55829B0966800836EDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F65BB2953ECE002E1EF3E424 /* Pods-PluginTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluginTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PluginTests/Pods-PluginTests.release.xcconfig"; sourceTree = "<group>"; };
 		F6753A823D3815DB436415E3 /* Pods_PluginTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PluginTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -157,6 +161,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CAC2D55129B0966800836EDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -165,6 +176,7 @@
 			children = (
 				50ADFF8A201F53D600D50D53 /* Plugin */,
 				50ADFF95201F53D600D50D53 /* PluginTests */,
+				CAC2D55529B0966800836EDF /* fcmSer */,
 				50ADFF89201F53D600D50D53 /* Products */,
 				8C8E7744173064A9F6D438E3 /* Pods */,
 				A797B9EFA3DCEFEA1FBB66A9 /* Frameworks */,
@@ -176,6 +188,7 @@
 			children = (
 				50ADFF88201F53D600D50D53 /* Plugin.framework */,
 				50ADFF91201F53D600D50D53 /* PluginTests.xctest */,
+				CAC2D55429B0966800836EDF /* fcmSer.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -291,6 +304,15 @@
 			path = PopUp;
 			sourceTree = "<group>";
 		};
+		CAC2D55529B0966800836EDF /* fcmSer */ = {
+			isa = PBXGroup;
+			children = (
+				CAC2D55629B0966800836EDF /* NotificationService.swift */,
+				CAC2D55829B0966800836EDF /* Info.plist */,
+			);
+			path = fcmSer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -346,13 +368,30 @@
 			productReference = 50ADFF91201F53D600D50D53 /* PluginTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		CAC2D55329B0966800836EDF /* fcmSer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CAC2D55929B0966800836EDF /* Build configuration list for PBXNativeTarget "fcmSer" */;
+			buildPhases = (
+				CAC2D55029B0966800836EDF /* Sources */,
+				CAC2D55129B0966800836EDF /* Frameworks */,
+				CAC2D55229B0966800836EDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = fcmSer;
+			productName = fcmSer;
+			productReference = CAC2D55429B0966800836EDF /* fcmSer.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		50ADFF7F201F53D600D50D53 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
+				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1400;
 				ORGANIZATIONNAME = "Max Lynch";
 				TargetAttributes = {
@@ -364,6 +403,10 @@
 					50ADFF90201F53D600D50D53 = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1100;
+						ProvisioningStyle = Automatic;
+					};
+					CAC2D55329B0966800836EDF = {
+						CreatedOnToolsVersion = 13.4.1;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -383,6 +426,7 @@
 			targets = (
 				50ADFF87201F53D600D50D53 /* Plugin */,
 				50ADFF90201F53D600D50D53 /* PluginTests */,
+				CAC2D55329B0966800836EDF /* fcmSer */,
 			);
 		};
 /* End PBXProject section */
@@ -397,6 +441,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		50ADFF8F201F53D600D50D53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CAC2D55229B0966800836EDF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -523,6 +574,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				50ADFF97201F53D600D50D53 /* Plumb5Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CAC2D55029B0966800836EDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CAC2D55729B0966800836EDF /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,6 +742,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.getcapacitor.Plugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -708,6 +768,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.getcapacitor.Plugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -741,6 +802,57 @@
 			};
 			name = Release;
 		};
+		CAC2D55A29B0966800836EDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KJ7ET3RE3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = fcmSer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = fcmSer;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Max Lynch. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = plumb5.fcmSer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CAC2D55B29B0966800836EDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3KJ7ET3RE3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = fcmSer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = fcmSer;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Max Lynch. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = plumb5.fcmSer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -767,6 +879,15 @@
 			buildConfigurations = (
 				50ADFFA0201F53D600D50D53 /* Debug */,
 				50ADFFA1201F53D600D50D53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CAC2D55929B0966800836EDF /* Build configuration list for PBXNativeTarget "fcmSer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CAC2D55A29B0966800836EDF /* Debug */,
+				CAC2D55B29B0966800836EDF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

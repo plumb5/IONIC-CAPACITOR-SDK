@@ -5,53 +5,53 @@ import type { Channel, DeliveredNotifications, EventDetails, ListChannelsResult,
 
 export class Plumb5Web extends WebPlugin implements Plumb5Plugin {
   register(): Promise<void> {
-   return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   getDeliveredNotifications(): Promise<DeliveredNotifications> {
-   return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   removeDeliveredNotifications(_delivered: DeliveredNotifications): Promise<void> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
   removeAllDeliveredNotifications(): Promise<void> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
   createChannel(_channel: Channel): Promise<void> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
   deleteChannel(_args: { id: string; }): Promise<void> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
   listChannels(): Promise<ListChannelsResult> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
   checkPermissions(): Promise<PermissionStatus> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
   requestPermissions(): Promise<PermissionStatus> {
-   return new Promise((resolve, _reject) => resolve);
+    throw new Error('Method not implemented.');
   }
 
   initializePlumb5(): Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   deviceRegistration(): Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   setUserDetails(_options: UserOptions):Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   tracking(_options: { ScreenName: string; PageParameter: any; }): Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   pushResponse(_options: { ScreenName: string; PageParameter: any; }):Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   eventPost(_options: EventDetails): Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
   notificationSubscribe():Promise<void> {
-    return new Promise((resolve, _reject) => resolve);
+   throw new Error('Method not implemented.');
   }
 
 
