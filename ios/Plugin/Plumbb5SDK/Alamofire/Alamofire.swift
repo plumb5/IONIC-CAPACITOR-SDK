@@ -76,9 +76,9 @@ public protocol URLRequestConvertible {
     func asURLRequest() throws -> URLRequest
 }
 
-extension URLRequestConvertible {
+public extension URLRequestConvertible {
     /// The URL request.
-    public var urlRequest: URLRequest? { return try? asURLRequest() }
+    var urlRequest: URLRequest? { return try? asURLRequest() }
 }
 
 extension URLRequest: URLRequestConvertible {
@@ -131,10 +131,11 @@ extension URLRequest {
 @discardableResult
 public func request(
     _ url: URLConvertible,
-    method: HTTPMethod = .get,Alamofire
-    parameters: Parameters? = nil,
+    method: HTTPMethod = .get, Alamofire parameters: Parameters? = nil,
+
     encoding: ParameterEncoding = URLEncoding.default,
-    headers: HTTPHeaders? = nil)
+    headers: HTTPHeaders? = nil
+)
     -> DataRequest
 {
     return SessionManager.default.request(
@@ -182,7 +183,8 @@ public func download(
     parameters: Parameters? = nil,
     encoding: ParameterEncoding = URLEncoding.default,
     headers: HTTPHeaders? = nil,
-    to destination: DownloadRequest.DownloadFileDestination? = nil)
+    to destination: DownloadRequest.DownloadFileDestination? = nil
+)
     -> DownloadRequest
 {
     return SessionManager.default.download(
@@ -208,7 +210,8 @@ public func download(
 @discardableResult
 public func download(
     _ urlRequest: URLRequestConvertible,
-    to destination: DownloadRequest.DownloadFileDestination? = nil)
+    to destination: DownloadRequest.DownloadFileDestination? = nil
+)
     -> DownloadRequest
 {
     return SessionManager.default.download(urlRequest, to: destination)
@@ -238,7 +241,8 @@ public func download(
 @discardableResult
 public func download(
     resumingWith resumeData: Data,
-    to destination: DownloadRequest.DownloadFileDestination? = nil)
+    to destination: DownloadRequest.DownloadFileDestination? = nil
+)
     -> DownloadRequest
 {
     return SessionManager.default.download(resumingWith: resumeData, to: destination)
@@ -262,7 +266,8 @@ public func upload(
     _ fileURL: URL,
     to url: URLConvertible,
     method: HTTPMethod = .post,
-    headers: HTTPHeaders? = nil)
+    headers: HTTPHeaders? = nil
+)
     -> UploadRequest
 {
     return SessionManager.default.upload(fileURL, to: url, method: method, headers: headers)
@@ -296,7 +301,8 @@ public func upload(
     _ data: Data,
     to url: URLConvertible,
     method: HTTPMethod = .post,
-    headers: HTTPHeaders? = nil)
+    headers: HTTPHeaders? = nil
+)
     -> UploadRequest
 {
     return SessionManager.default.upload(data, to: url, method: method, headers: headers)
@@ -330,7 +336,8 @@ public func upload(
     _ stream: InputStream,
     to url: URLConvertible,
     method: HTTPMethod = .post,
-    headers: HTTPHeaders? = nil)
+    headers: HTTPHeaders? = nil
+)
     -> UploadRequest
 {
     return SessionManager.default.upload(stream, to: url, method: method, headers: headers)
@@ -379,8 +386,8 @@ public func upload(
     to url: URLConvertible,
     method: HTTPMethod = .post,
     headers: HTTPHeaders? = nil,
-    encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Void)?)
-{
+    encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Void)?
+) {
     return SessionManager.default.upload(
         multipartFormData: multipartFormData,
         usingThreshold: encodingMemoryThreshold,
@@ -416,8 +423,8 @@ public func upload(
     multipartFormData: @escaping (MultipartFormData) -> Void,
     usingThreshold encodingMemoryThreshold: UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold,
     with urlRequest: URLRequestConvertible,
-    encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Void)?)
-{
+    encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Void)?
+) {
     return SessionManager.default.upload(
         multipartFormData: multipartFormData,
         usingThreshold: encodingMemoryThreshold,
@@ -428,38 +435,38 @@ public func upload(
 
 #if !os(watchOS)
 
-// MARK: - Stream Request
+    // MARK: - Stream Request
 
-// MARK: Hostname and Port
+    // MARK: Hostname and Port
 
-/// Creates a `StreamRequest` using the default `SessionManager` for bidirectional streaming with the `hostname`
-/// and `port`.
-///
-/// If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
-///
-/// - parameter hostName: The hostname of the server to connect to.
-/// - parameter port:     The port of the server to connect to.
-///
-/// - returns: The created `StreamRequest`.
-@discardableResult
-@available(iOS 9.0, macOS 10.11, tvOS 9.0, *)
-public func stream(withHostName hostName: String, port: Int) -> StreamRequest {
-    return SessionManager.default.stream(withHostName: hostName, port: port)
-}
+    /// Creates a `StreamRequest` using the default `SessionManager` for bidirectional streaming with the `hostname`
+    /// and `port`.
+    ///
+    /// If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+    ///
+    /// - parameter hostName: The hostname of the server to connect to.
+    /// - parameter port:     The port of the server to connect to.
+    ///
+    /// - returns: The created `StreamRequest`.
+    @discardableResult
+    @available(iOS 9.0, macOS 10.11, tvOS 9.0, *)
+    public func stream(withHostName hostName: String, port: Int) -> StreamRequest {
+        return SessionManager.default.stream(withHostName: hostName, port: port)
+    }
 
-// MARK: NetService
+    // MARK: NetService
 
-/// Creates a `StreamRequest` using the default `SessionManager` for bidirectional streaming with the `netService`.
-///
-/// If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
-///
-/// - parameter netService: The net service used to identify the endpoint.
-///
-/// - returns: The created `StreamRequest`.
-@discardableResult
-@available(iOS 9.0, macOS 10.11, tvOS 9.0, *)
-public func stream(with netService: NetService) -> StreamRequest {
-    return SessionManager.default.stream(with: netService)
-}
+    /// Creates a `StreamRequest` using the default `SessionManager` for bidirectional streaming with the `netService`.
+    ///
+    /// If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+    ///
+    /// - parameter netService: The net service used to identify the endpoint.
+    ///
+    /// - returns: The created `StreamRequest`.
+    @discardableResult
+    @available(iOS 9.0, macOS 10.11, tvOS 9.0, *)
+    public func stream(with netService: NetService) -> StreamRequest {
+        return SessionManager.default.stream(with: netService)
+    }
 
 #endif

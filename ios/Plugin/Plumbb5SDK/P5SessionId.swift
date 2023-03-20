@@ -8,30 +8,29 @@
 
 import Foundation
 class P5SessionId {
-    
     static let sharedInstance = P5SessionId()
-    //static var preTime:Int = 0
-    static var p5Session:String = ""
-    
-    static var sessionId:Int64 = 0
-    
+    // static var preTime:Int = 0
+    static var p5Session: String = ""
+
+    static var sessionId: Int64 = 0
+
     func getCurrentDate() -> String {
         let date = Date()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
         let result = formatter.string(from: date)
-        
-        return result
 
+        return result
     }
-    func getCurrentMillis()->Int64 {
+
+    func getCurrentMillis() -> Int64 {
         return Int64(Date().timeIntervalSince1970 * 1000)
     }
-    
+
     func getSessionId() -> String {
         let miliSeconds = getCurrentMillis()
         let diff = miliSeconds - P5SessionId.sessionId
-        if P5SessionId.sessionId == 0  || diff > 300000{
+        if P5SessionId.sessionId == 0 || diff > 300_000 {
             P5SessionId.sessionId = miliSeconds
             print("Diff : \(diff)")
         }
@@ -41,12 +40,9 @@ class P5SessionId {
         return P5SessionId.p5Session
     }
 
-    
     // Declare an initializer
     // Because this class is singleton only one instance of this class can be created
     private init() {
         print("P5DeviceInfo has been initialized")
     }
-    
-    
 }

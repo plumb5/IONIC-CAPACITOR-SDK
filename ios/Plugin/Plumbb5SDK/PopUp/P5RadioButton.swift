@@ -9,13 +9,14 @@
 import UIKit
 
 class P5RadioButton: UIButton {
-    @objc func configureButton(){
-        self.titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right:0)
-        self.contentHorizontalAlignment = .left
+    @objc func configureButton() {
+        titleEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        contentHorizontalAlignment = .left
+//        self.backgroundColor = .black
         let frameWorkBundle = Bundle(for: type(of: self))
-        let imgChecked = UIImage.init(named: "ic_radio_selected", in: frameWorkBundle, compatibleWith: nil);
-        let imgUnChecked = UIImage.init(named: "ic_radio_unselected", in: frameWorkBundle, compatibleWith: nil);
-        self.setImage(imgChecked, for: .selected)
-        self.setImage(imgUnChecked, for: .normal)
+        let imgChecked = UIImage(named: "ic_radio_selected")
+        let imgUnChecked = UIImage(named: "ic_radio_unselected")
+        setImage(imgChecked, for: .selected)
+        setImage(imgUnChecked, for: .normal)
     }
 }

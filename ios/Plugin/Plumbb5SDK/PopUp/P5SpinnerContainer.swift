@@ -9,26 +9,25 @@
 import UIKit
 
 class P5SpinnerContainer: P5BaseFromView {
-
     /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-    
-    @objc var selectItem :String?
-    
+     // Only override draw() if you perform custom drawing.
+     // An empty implementation adversely affects performance during animation.
+     override func draw(_ rect: CGRect) {
+         // Drawing code
+     }
+     */
+
+    @objc var selectItem: String?
+
     override func isFieldValid() -> Bool {
-        if selectItem != nil{
+        if selectItem != nil {
             return true
-        }else{
+        } else {
             return false
         }
     }
-    override func fieldValue() -> String {
-        return selectItem!;
-    }
 
+    override func fieldValue() -> String {
+        return selectItem!
+    }
 }

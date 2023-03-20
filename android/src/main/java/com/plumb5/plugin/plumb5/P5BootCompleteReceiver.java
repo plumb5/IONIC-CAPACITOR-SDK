@@ -32,7 +32,7 @@ public class P5BootCompleteReceiver extends BroadcastReceiver {
         afilter.addAction(pkg + ".8");
         afilter.addAction(pkg + ".9");
         afilter.addAction(pkg + ".10");
-        context.getApplicationContext().registerReceiver(plyf.MyActionReceiver, afilter);
+        context.getApplicationContext().registerReceiver(new P5LifeCycle.MyActionReceiver(), afilter);
         context.getApplicationContext().registerReceiver(plyf.dMyAlarmReceiver, new IntentFilter(pkg + ".alarm"));
 
 

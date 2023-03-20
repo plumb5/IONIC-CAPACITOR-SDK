@@ -8,14 +8,11 @@
 
 import Foundation
 class P5UserDetails {
-    
     // MARK: - Attributes
-    
+
     let name: String = ""
     let email: String = ""
     let phone: String = ""
-    
+
     // MARK: - Init
-    
- 
 }

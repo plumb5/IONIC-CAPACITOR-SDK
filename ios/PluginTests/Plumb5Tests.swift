@@ -1,5 +1,5 @@
-import XCTest
 @testable import Plugin
+import XCTest
 
 class Plumb5Tests: XCTestCase {
     override func setUp() {

@@ -1,6 +1,5 @@
 package com.plumb5.plugin.plumb5;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -9,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
@@ -37,16 +35,15 @@ public class P5SendNotification {
 
         try {
             String apiKey = Plumb5Plugin.appKey;
-
-
-            Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            Plumb5Plugin eng = new Plumb5Plugin();
+          JSONObject json = new JSONObject();
+            Intent intent = new Intent();
+            intent.setComponent(new ComponentName(context.getPackageName(), context.getPackageName() + ".MainActivity"));
             intent.putExtra("Plumb5", 0);
 
             if (clkAction == 2) {
-                int len1 = Plumb5Plugin.serviceURL.lastIndexOf('/');
-                String getnewurl = Plumb5Plugin.serviceURL.substring(0, len1 - 1);
+                int len1 = eng.getMetadata(context, P5Constants.PLUMB5_BASE_URL).lastIndexOf('/');
+                String getnewurl = eng.getMetadata(context, P5Constants.PLUMB5_BASE_URL).substring(0, len1 - 1);
                 String geturl = getnewurl.substring(0, getnewurl.lastIndexOf('/'));
                 Uri uri = Uri.parse(nIntent);
                 intent.putExtra("ebtnpram", uri.toString());
@@ -63,26 +60,21 @@ public class P5SendNotification {
                     String[] paTextValue = Parameter.split("\\=");
                     intent.putExtra(paTextValue[0], (paTextValue.length > 1 ? paTextValue[1] : ""));
                 }
+              intent.setAction(context.getPackageName() + "." + "10");
 
-                if (clkAction == 1) {
-                    int lene = nIntent.lastIndexOf('.');
-                    intent.setComponent(new ComponentName(nIntent.substring(0, lene), nIntent));
-                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                } else {
-                    intent.putExtra("PushId", PushId);
-                    intent.putExtra("workflowdataId", workflowId);
-                    intent.putExtra("P5UniqueId", P5UniqueId);
-                    intent.putExtra("sentFromNotiFication", true);
-                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("screenName", nIntent);
-                    intent.setAction(context.getPackageName() + "." + "10");
-
-                }
             }
+
+          intent.putExtra("PushId", PushId);
+          intent.putExtra("workflowdataId", workflowId);
+          intent.putExtra("P5UniqueId", P5UniqueId);
+          intent.putExtra("sentFromNotiFication", true);
+          intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+          intent.putExtra("screenName", nIntent);
+          json.put("ScreenName",nIntent);
             //Log.d("p5", nIntent + "nghjhgjn" + Parameter);
 
             //Insert loading................
-            JSONObject json = new JSONObject();
+
             try {
 
                 json.put("apiKey", apiKey);
@@ -173,7 +165,8 @@ public class P5SendNotification {
                             btnReceive.putExtra("workflowid", workflowId);
                             btnReceive.putExtra("P5UniqueId", P5UniqueId);
                             btnReceive.setAction(context.getPackageName() + "." + actionno);
-
+                            btnReceive.setComponent(new ComponentName(context.getPackageName(), context.getPackageName() + ".MainActivity"));
+                            btnReceive.putExtra("Plumb5", 0);
                             PendingIntent pendingIntentYes = null;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                 pendingIntentYes = PendingIntent.getActivity(context, 0, btnReceive, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -183,7 +176,7 @@ public class P5SendNotification {
 
                             }
 
-                            Log.i(TAG, "plumb5." + actionno + "/" + s);
+                            Log.d(TAG, "plumb5." + actionno + "/" + s);
 
                             int btnIcon = 0;
                             if (icochk != 0) {
@@ -206,6 +199,7 @@ public class P5SendNotification {
                                 }
                             }
                             builder.addAction(btnIcon, btnname, pendingIntentYes);
+
 
                         }
                     }
